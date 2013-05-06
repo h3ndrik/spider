@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
+import logging
+import os, signal
+from spider.helper import parse_args
+from spider.crawler import Crawler
+
+"""
+    spider
+    ~~~~~~~~~
+    
+    Crawl ...
+        
+    :copyleft: 2013 by h3ndrik.
+    :license: WTFTPL, see LICENSE for more details.
+"""
+
+__version__ = "0.0.0"
+
+
+def interrupthandler(signum, frame):
+    #TODO
+    #exit("Caught Interrupt: " + signum)
+    pass
+
+if __name__ == "__main__":
+
+    # Startup
+    logging.info("=== Crawler v." + __version__ + " ===")
+    if os.geteuid() == 0:
+        logging.warning("Warning, running as root")
+    os.nice(19)
+    # Set up handlers for signals
+    signal.signal(signal.SIGINT, interrupthandler)
+    signal.signal(signal.SIGTERM, interrupthandler)
+    args = parse_args()
+
+    crawler = Crawler()
+
+    #args.func(args)  # Broken, work around:
+#    print args
+    if args.sub == 'add':
+        crawler.add(args)
+    elif args.sub == 'del':
+        crawler.delete(args)
+    elif args.sub == 'disable':
+        crawler.disable(args)
+    elif args.sub == 'enable':
+        crawler.enable(args)
+    elif args.sub == 'crawl':
+        crawler.crawl(args)
+    else:
+        crawler.crawl(args)
+
+    logging.info("Done. Exiting.")
