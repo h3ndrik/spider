@@ -48,6 +48,10 @@ class Crawler:
                 fs.walk()
             except CrawlerError:
                 pass
+            except:
+                item.errors += 1
+                self.db.session.commit()
+                raise
 
     def check(self, name):
         item = self.db.getControl(name)
