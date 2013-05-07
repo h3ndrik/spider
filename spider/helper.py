@@ -55,6 +55,9 @@ def parse_args():
                    help='only crawl name')
     #parser_add.set_defaults(func=crawl)
 
+    parser_crawl = subparsers.add_parser('list', help='list configured directories')
+    #parser_add.set_defaults(func=list)
+
     args = parser.parse_args()
 
     logger = logging.getLogger()

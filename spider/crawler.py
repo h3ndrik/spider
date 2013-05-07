@@ -33,6 +33,9 @@ class Crawler:
             logging.info('Already enabled')
         item.crawl = 1
         self.db.session.commit()
+    def list(self, args):
+        for item in self.db.session.query(Control):
+            print("Name: \"" + item.name + "\", Directory: \"" + item.directory + "\", NeedsMointpoint: \"" + item.needsmountpoint + "\", Enabled: " + str(item.crawl))
     def crawl(self, args):
         if hasattr(args, "name"):
             items = self.db.getJobs(args.name)

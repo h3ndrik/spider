@@ -28,7 +28,7 @@ class FS(object):
 
         logging.info('Analyzing Files')
         for item in items:
-            logging.debug('Analyzing: ' + item.filename)
+            #logging.debug('Analyzing: ' + item.filename)
             try:
                 self.insertfile(item.filename)
             except:

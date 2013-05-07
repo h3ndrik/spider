@@ -49,6 +49,8 @@ if __name__ == "__main__":
         crawler.enable(args)
     elif args.sub == 'crawl':
         crawler.crawl(args)
+    elif args.sub == 'list':
+        crawler.list(args)
     else:
         crawler.crawl(args)
 
