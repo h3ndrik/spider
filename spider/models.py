@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 #from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -42,6 +43,7 @@ class Files(Base):
     mime = Column(String)
     hash = Column(String(32))
     removed = Column(Integer(10))
+    meta = relationship("Metadata", uselist=False, backref="files")
 
 class Metadata(Base):
     """"""
@@ -62,9 +64,21 @@ class Metadata(Base):
     resolution = Column(String)
     codec = Column(String)
     #bitrate = Column(String)
-
     quality = Column(String)
     group = Column(String)
+
+    title = Column(String)
+    artist = Column(String)
+    album = Column(String)
+    year = Column(Integer)
+    track = Column(Integer)
+    genre = Column(String)
+    collection = Column(String)
+
+    tags = Column(String)
+    comment = Column(String)
+    auto = Column(Integer)
+    flag = Column(Integer)
 
 class TmpFiles(Base):
     """"""
