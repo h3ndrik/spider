@@ -6,6 +6,7 @@ mimetypes.init()
 from spider.db import DB
 from spider.models import Control, Files, TmpFiles
 from spider.helper import hashsum
+from spider.meta import Meta
 
 class FS(object):
 
@@ -13,6 +14,7 @@ class FS(object):
         self.db = db
         self.directory = directory
         self.category = name
+        self.meta = Meta(self.db, name)
         self.timeout = 2592000
 
     def walk(self):
@@ -40,7 +42,7 @@ class FS(object):
         self.db.session.commit()
 
         #logging.info('Deleting old database entries')
-        # TODO
+        # TODO and think of meta table
 
     def read_fs(self):
         self.db.cleanTmpFiles()
@@ -91,6 +93,8 @@ class FS(object):
         removed = None
         item = Files(filename=filename, category=category, mtime=mtime, firstseen=firstseen, size=size, mime=mime, hash=hash, removed=removed)
         self.db.add(item)
+        self.db.session.flush()
+        self.meta.insertmeta(filename, item.id)
 
     def removefile(self, filename):
         item = self.db.session.query(Files).filter(Files.filename == filename).one()

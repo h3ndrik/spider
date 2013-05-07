@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 #from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -42,6 +42,28 @@ class Files(Base):
     mime = Column(String)
     hash = Column(String(32))
     removed = Column(Integer(10))
+
+class Metadata(Base):
+    """"""
+    __tablename__ = 'meta'
+
+    id = Column(Integer, ForeignKey('files.id'),  primary_key=True)
+    #id = Column(Integer, primary_key=True)
+    filetype = Column(String)
+    group = Column(String)
+    seriesname = Column(String)
+    seasonnumber = Column(Integer)
+    episodenumber = Column(Integer)
+    episodenumberstart = Column(Integer)
+    episodenumberend = Column(Integer)
+    year = Column(Integer)
+    month = Column(Integer)
+    day = Column(Integer)
+    crc = Column(String)
+    resolution = Column(String)
+    bitrate = Column(String)
+    codec = Column(String)
+    quality = Column(String)
 
 class TmpFiles(Base):
     """"""

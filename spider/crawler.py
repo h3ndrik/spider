@@ -49,6 +49,7 @@ class Crawler:
             except CrawlerError:
                 pass
             except:
+                self.db.session.rollback()
                 item.errors += 1
                 self.db.session.commit()
                 raise
