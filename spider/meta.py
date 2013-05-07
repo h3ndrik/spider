@@ -26,6 +26,10 @@ class Meta(object):
             for regex in self.tv_regexs:
                 match = regex.match(os.path.basename(filename))
                 if match:
+                    seriesname = None
+                    seasonnumber = None
+                    episodenumber = None
+                    group = None
                     keys = match.groupdict().keys()
                     if 'seriesname' in keys:
                         seriesname = match.group('seriesname')
@@ -33,7 +37,17 @@ class Meta(object):
                         seasonnumber = match.group('seasonnumber')
                     if 'episodenumber' in keys:
                         episodenumber = match.group('episodenumber')
-                    item = Metadata(id=id, seriesname=seriesname, seasonnumber=seasonnumber, episodenumber=episodenumber)
+                    if 'group' in keys:
+                        group = match.group('group')
+                    if 'episodenumberstart' in keys:
+                        episodenumber = ''.join([match.group('episodenumberstart'), '-', match.group('episodenumberend')])
+                    if 'year' in keys:
+                        episodenumber = ''.join([episodenumber, match.group('year')])
+                    if 'month' in keys:
+                        episodenumber = ''.join([episodenumber, '-', match.group('month')])
+                    if 'day' in keys:
+                        episodenumber = ''.join([episodenumber, '-', match.group('year')])
+                    item = Metadata(id=id, filetype=filetype, seriesname=seriesname, seasonnumber=seasonnumber, episodenumber=episodenumber, group=group)
                     self.db.add(item)
                     return
             logging.info('Cannot parse %r' % filename)
