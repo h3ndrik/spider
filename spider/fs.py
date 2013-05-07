@@ -10,11 +10,12 @@ from spider.meta import Meta
 
 class FS(object):
 
-    def __init__(self, db, directory, name):
+    def __init__(self, db, control):
         self.db = db
-        self.directory = directory
-        self.category = name
-        self.meta = Meta(self.db, name)
+        self.control = control
+        self.directory = control.directory
+        self.category = control.name
+        self.meta = Meta(self.db, control.name)
         self.timeout = 2592000
 
     def walk(self):
@@ -28,7 +29,14 @@ class FS(object):
         logging.info('Analyzing Files')
         for item in items:
             logging.debug('Analyzing: ' + item.filename)
-            self.insertfile(item.filename)
+            try:
+                self.insertfile(item.filename)
+            except:
+                #TODO: insert with flag set
+                logging.warning('Could not insert file. Probably bad encoding?')
+                self.control.errors += 1
+                self.db.session.commit()
+                pass
         self.db.session.commit()
 
         logging.info('Computing deleted files')
@@ -49,17 +57,17 @@ class FS(object):
         fs_enc = sys.getfilesystemencoding()
 #        if sys.version_info <= (3, 0):
 #            self.directory = unicode(self.directory, fs_enc)
-        for dir, subdirs, files in os.walk(self.directory):
-            logging.debug(''.join(["Reading dir: ", dir]))
+        for dir, subdirs, files in os.walk(self.directory.encode(fs_enc)):
+            logging.debug(''.join(["Reading dir: ", dir.decode(fs_enc, 'replace')]))
             for subdir in subdirs:
                 filename = os.path.join(dir, subdir)
                 mtime = os.stat(filename).st_mtime
-                item = TmpFiles(filename=filename, mtime=mtime)
+                item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                 self.db.add(item)
             for file in files:
                 filename = os.path.join(dir, file)
                 mtime = os.stat(filename).st_mtime
-                item = TmpFiles(filename=filename, mtime=mtime)
+                item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                 self.db.add(item)
 
             #if '.git' in subdirs:

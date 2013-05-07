@@ -4,7 +4,7 @@ import argparse
 
 def hashsum(filename, blocksize=65536):
     h = hashlib.md5()
-    f = open(filename, 'r')
+    f = open(filename, 'rb', encoding=None)
     buf = f.read(blocksize)
     while len(buf) > 0:
         h.update(buf)

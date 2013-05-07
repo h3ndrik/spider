@@ -20,7 +20,7 @@ class Crawler:
     def delete(self, args):
         item = self.db.getControl(args.name)
         self.db.delete(item)
-        self.session.commit()
+        self.db.session.commit()
     def disable(self, args):
         item = self.db.getControl(args.name)
         if item.crawl == 0:
@@ -43,7 +43,7 @@ class Crawler:
             try:
                 self.check(item.name)
                 self.db.lock(item)
-                fs = FS(self.db, item.directory, item.name)
+                fs = FS(self.db, item)
                 self.db.unlock(item)
                 fs.walk()
             except CrawlerError:
