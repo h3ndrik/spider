@@ -39,6 +39,9 @@
         </table>
       </div>
 
+      <div class="container" id="detail">
+      </div>
+
     </div> <!-- /container -->
 
 %include pagination
