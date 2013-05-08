@@ -4,7 +4,7 @@
     <div class="container">
 
       <div class="container" id="div_logo">
-        <!--<a href="/"><img src="img/logo.png"/></a>-->
+        <!--<a href="/"><img src="img/logo.png" width="572" height="210"/></a>-->
         <h1 class="text-center">Suche</h1>
       </div>
 

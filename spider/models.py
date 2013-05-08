@@ -32,7 +32,7 @@ class DictSerializable(object):
 #        return json.dumps(tmp)
 
 class Control(Base, DictSerializable):
-    """"""
+    """control/config structure"""
     __tablename__ = 'control'
 
     name = Column(String, primary_key=True)
@@ -57,7 +57,7 @@ class Control(Base, DictSerializable):
 
 
 class Files(Base, DictSerializable):
-    """"""
+    """direct attributes of file"""
     __tablename__ = 'files'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -72,7 +72,7 @@ class Files(Base, DictSerializable):
     meta = relationship("Metadata", uselist=False, backref="files")
 
 class Metadata(Base, DictSerializable):
-    """"""
+    """indirect and user-generated attributes of file"""
     __tablename__ = 'meta'
 
     id = Column(Integer, ForeignKey('files.id'),  primary_key=True)
@@ -107,7 +107,7 @@ class Metadata(Base, DictSerializable):
     flag = Column(Integer)
 
 class TmpFiles(Base, DictSerializable):
-    """"""
+    """holds snapshot of filesystem for further processing"""
     __tablename__ = 'tmp'
 
     filename = Column(String, primary_key=True)

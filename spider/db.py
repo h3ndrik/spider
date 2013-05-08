@@ -4,6 +4,7 @@ from os import getpid
 import logging
 
 class DB(object):
+    """Database interface"""
 #    engine = None
 #    session = None
 

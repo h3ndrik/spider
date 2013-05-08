@@ -9,6 +9,7 @@ from spider.helper import hashsum
 from spider.meta import Meta
 
 class FS(object):
+    """All Filesystem interaction"""
 
     def __init__(self, db, control):
         self.db = db
@@ -19,6 +20,7 @@ class FS(object):
         self.timeout = 2592000
 
     def walk(self):
+        """execute subroutines of filecrawler"""
         logging.info('Reading Filesystem')
         self.read_fs()
         logging.info('Computing new files')
@@ -53,6 +55,7 @@ class FS(object):
         # TODO and think of meta table
 
     def read_fs(self):
+        """walk filesystem and write to temporary table"""
         self.db.cleanTmpFiles()
         fs_enc = sys.getfilesystemencoding()
 #        if sys.version_info <= (3, 0):
@@ -61,22 +64,22 @@ class FS(object):
             logging.debug(''.join(["Reading dir: ", dir.decode(fs_enc, 'replace')]))
             for subdir in subdirs:
                 try:
-#                  if not os.path.ismount(os.path.join(dir, subdir)):
-#                    logging.warning('mountpoint?')
-                  filename = os.path.join(dir, subdir)
-                  mtime = os.stat(filename).st_mtime
-                  item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
-                  self.db.add(item)
+#                    if not os.path.ismount(os.path.join(dir, subdir)):
+#                      logging.warning('mountpoint?')
+                    filename = os.path.join(dir, subdir)
+                    mtime = os.stat(filename).st_mtime
+                    item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
+                    self.db.add(item)
                 except:
-                  logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
+                    logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
             for file in files:
                 try:
-                  filename = os.path.join(dir, file)
-                  mtime = os.stat(filename).st_mtime
-                  item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
-                  self.db.add(item)
+                    filename = os.path.join(dir, file)
+                    mtime = os.stat(filename).st_mtime
+                    item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
+                    self.db.add(item)
                 except:
-                  logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
+                    logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
 
             #if '.git' in subdirs:
                 #TODO: prune directories
@@ -84,6 +87,7 @@ class FS(object):
         self.db.session.commit()
 
     def insertfile(self, filename):
+        """gather filesystem infos for 'filename' and write to table"""
         #filename = os.path.join(dir, file)
         if os.path.isfile(filename):
             logging.debug(''.join(["Updating(New): ", filename]))
@@ -113,5 +117,6 @@ class FS(object):
         self.meta.insertmeta(filename, item.id)
 
     def removefile(self, filename):
+        """mark 'filename' as removed"""
         item = self.db.session.query(Files).filter(Files.filename == filename).one()
         item.removed = time()

@@ -5,6 +5,7 @@ from spider.models import Control, Files
 from spider.fs import FS
 
 class Crawler:
+    """mislabeled main program"""
 
     def __init__(self):
         self.db = DB()
@@ -14,29 +15,35 @@ class Crawler:
         pass
 
     def add(self, args):
+        """add name directory mountpoint"""
         item = Control(args.name, args.directory, args.mountpoint)
         self.db.add(item)
         self.db.session.commit()
     def delete(self, args):
+        """del name"""
         item = self.db.getControl(args.name)
         self.db.delete(item)
         self.db.session.commit()
     def disable(self, args):
+        """disable name"""
         item = self.db.getControl(args.name)
         if item.crawl == 0:
             logging.info('Already disabled')
         item.crawl = 0
         self.db.session.commit()
     def enable(self, args):
+        """enable name"""
         item = self.db.getControl(args.name)
         if item.crawl == 1:
             logging.info('Already enabled')
         item.crawl = 1
         self.db.session.commit()
     def list(self, args):
+        """list"""
         for item in self.db.session.query(Control):
             print("Name: \"" + item.name + "\", Directory: \"" + item.directory + "\", NeedsMointpoint: \"" + item.needsmountpoint + "\", Enabled: " + str(item.crawl))
     def crawl(self, args):
+        """crawl"""
         if hasattr(args, "name"):
             items = self.db.getJobs(args.name)
         else:
@@ -58,13 +65,14 @@ class Crawler:
                 raise
 
     def check(self, name):
+        """check if it's safe to crawl 'name'"""
         item = self.db.getControl(name)
         if item.crawl != 1:
             logger.warning('Directory marked not to crawl. Skipping.')
             raise(CrawlerError('Directory marked not to crawl. Skipping.'))
         if item.pid_lock != 0:
             try:
-                os.kill(item.pid_lock, 0)
+                os.kill(item.pid_lock, 0)	# Sends nothing but raises exception if pid is not valid
             except OSError:
                 logging.warning('Last crawl did not terminate cleanly. Proceeding.')
                 item.pid_lock = 0

@@ -5,6 +5,7 @@ from spider.meta_strings import strings
 from spider.models import Metadata
 
 class Meta(object):
+    """Metadata handling for (multimedia-)files"""
 
     def __init__(self, db, name):
         self.db = db
@@ -21,6 +22,7 @@ class Meta(object):
                 self.tv_regexs.append(regex)
 
     def insertmeta(self, filename, id):
+        """gather metadata for 'filename' and write to metadata table"""
         if os.path.splitext(filename)[1].strip().lower() in strings['filetype_video']:
             filetype = 'video'
             for regex in self.tv_regexs:
@@ -54,9 +56,12 @@ class Meta(object):
 
         elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_audio']:
             filetype = 'audio'
+            #TODO
         elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_picture']:
             filetype = 'picture'
+            #TODO
         # E-Book
         # Software
         else:
             filetype = 'other'
+            #TODO
