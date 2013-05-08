@@ -28,9 +28,16 @@ function append_result(item, table) {
 	var link = '/detail/'+item.id;
 	var path = item.filename.substring(0, item.filename.lastIndexOf("/"));
 	var filename = item.filename.substring(item.filename.lastIndexOf("/"));
-        var icon = "/mime/" + item.mime.substring(0, item.mime.indexOf("/")) + ".png";
+        if (!item.mime || 0 === item.mime.length) {
+		item.mime = "unknown";
+	}
+	if (item.mime.indexOf("/") == -1) {
+		item.mime += "/";
+	}
+
 	var size = item.size;
 	var mtime = item.mtime;
+        var icon = "/mime/" + item.mime.substring(0, item.mime.indexOf("/")) + ".png";
 	var category = '['+item.category+']';
 	table.append($('<tr>')
 		.append($('<td>')
@@ -73,42 +80,18 @@ function query() {
 	var form = $('#search');
 	var data = form.serialize();
 
-	var results = $('#results');
+	var table = $('#results');
 
 	var q = $("input:first").val();
 	$.getJSON('/api/search/?q=' + q, function (data) {
 		//var items = [];
-		results.empty()
+		table.empty()
 		$('#div_results').show();
 		$.each(data, function(key, val) {
 			if (key == 'results') {
 				$.each(val, function(key, val) {
-					var link = '#';
-					var path = val.filename.substring(0, val.filename.lastIndexOf("/"));
-					var filename = val.filename.substring(val.filename.lastIndexOf("/"));
-					var size = val.size;
-					var mtime = val.mtime;
-					var category = '['+val.category+']';
-					results.append($('<tr>')
-						.append($('<td>')
-							.append($('<span>')
-								.append($('<a>', {href: link})
-									.append($('<img/>', {src:'img/mime/unknown.png'}))
-								)
-							)
-							.append($('<br/>'))
-							.append($('<span>').text(category))
-						)
-						.append($('<td>')
-							.append($('<span>')
-								.append($('<a>', {href:link, text:filename}))
-							)
-							.append($('<br/>'))
-							.append($('<span>', {'class': 'pull-left span1'}).text(size))
-							.append($('<span>').text(path))
-							.append($('<span>', {'class': 'pull-right'}).text(mtime))
-						)
-					);
+					append_result(val, table);
+
 				});
 			}
 
