@@ -28,6 +28,7 @@ class Meta(object):
             for regex in self.tv_regexs:
                 match = regex.match(os.path.basename(filename))
                 if match:
+                    source = 'filename_patterns_tv_shows'
                     seriesname = None
                     seasonnumber = None
                     episodenumber = None
@@ -51,7 +52,7 @@ class Meta(object):
                         episodenumber = ''.join([episodenumber, '-', match.group('year')])
                     item = Metadata(id=id, filetype=filetype, seriesname=seriesname, seasonnumber=seasonnumber, episodenumber=episodenumber, group=group)
                     self.db.add(item)
-                    return
+                    return   # break on first match
             logging.info('Cannot parse %r' % filename)
 
         elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_audio']:

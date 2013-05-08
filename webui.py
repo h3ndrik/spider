@@ -34,11 +34,8 @@ def favicon():
 def detail(id=None):
     assert isinstance(id, int)
     filedetail = session.query(Files).filter(Files.id == id).one()
-    try:
-        filemeta = session.query(Metadata).filter(Metadata.id == id).one()
-    except:
-        filemeta = Metadata()
-    return {'detail': filedetail._asdict(), 'meta': filemeta._asdict()}
+    filemeta = session.query(Metadata).filter(Metadata.id == id)
+    return {'detail': filedetail._asdict(), 'meta': [meta._asdict() for meta in filemeta]}
 
 @app.route('/api/search/')
 def api_search():

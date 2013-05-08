@@ -106,6 +106,8 @@ class Metadata(Base, DictSerializable):
     auto = Column(Integer)
     flag = Column(Integer)
 
+    source = Column(String)    # who generated this metadata
+
 class TmpFiles(Base, DictSerializable):
     """holds snapshot of filesystem for further processing"""
     __tablename__ = 'tmp'

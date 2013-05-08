@@ -273,4 +273,20 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [\._ -][^\\/]*$                          # More padding, then anything
         ''',
     ],
+    'path_patterns_tv_shows': [
+    ],
+    'path_patterns_movies': [
+    ],
+    'path_patterns_albums': [
+    ],
+    'path_patterns_audiobooks': [
+    ],
+    'path_patterns_ebooks': [
+    ],
+    'path_patterns_games': [
+    ],
+    'path_patterns_software': [
+    ],
+    'path_patterns_images': [
+    ],
 }
