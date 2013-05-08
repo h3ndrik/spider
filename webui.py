@@ -17,6 +17,10 @@ Base.metadata.create_all(engine)
 def index():
     return template('index', title='Spider Search')
 
+@app.route('/favicon.ico')
+def favicon():
+    return static_file('favicon.ico', root='./webui/img')
+
 #@app.route('/search/')
 #@app.route('/suche/<query>')
 #def suche():
