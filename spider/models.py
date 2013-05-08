@@ -2,8 +2,34 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 #from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
+from collections import OrderedDict
+import json
 
 Base = declarative_base()
+
+class DictSerializable(object):
+    def _asdict(self):
+        result = OrderedDict()
+        for key in self.__mapper__.c.keys():
+            result[key] = getattr(self, key)
+        return result
+
+#class BaseModel(object):
+#    """Example: Movie.load(session, movie='Europa', year='1991')"""
+#    @classmethod
+#    def load(cls, session, **kwargs):
+#        q = session.query(cls)
+#        filters = [getattr(cls, field_name)==kwargs[field_name] \
+#                   for field_name in kwargs]
+#        return q.filter(and_(*filters)).one()
+#
+#    def drop(self):
+#        self.session.delete(self)
+#
+#    def serialize(self):
+#        tmp = self.__dict__.copy()
+#        del tmp['_sa_instance_state']
+#        return json.dumps(tmp)
 
 class Control(Base):
     """"""
@@ -30,7 +56,7 @@ class Control(Base):
         return "<Control('%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (self.name, self.directory, self.needsmountpoint, self.crawl, self.errors, self.last_crawl, self.pid_lock)
 
 
-class Files(Base):
+class Files(Base, DictSerializable):
     """"""
     __tablename__ = 'files'
 
