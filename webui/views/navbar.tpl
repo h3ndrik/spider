@@ -9,9 +9,9 @@
           <a class="brand" href="#">{{title}}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#suche">Suche</a></li>
-              <li><a href="#neues">Neues</a></li>
+              <li class="active" id="btn_home"><a href="#" onclick="go_home()">Home</a></li>
+              <li id="btn_search"><a href="#suche" onclick="go_search()">Suche</a></li>
+              <li id="btn_new"><a href="#neues" onclick="go_new()">Neues</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

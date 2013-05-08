@@ -5,7 +5,7 @@
 
       <div class="container" id="div_logo">
         <!--<a href="/"><img src="img/logo.png"/></a>-->
-        <h1>Suche</h1>
+        <h1 class="text-center">Suche</h1>
       </div>
 
       <div class="container" id="div_message">
@@ -15,7 +15,7 @@
       <div class="container" id="div_search">
         <form class="well form-search" id="search" action="javascript:query()">
           <fieldset>
-            <div class="input-append">
+            <div class="input-append span8">
               <input type="text" class="input-block-level search-query">
               <button type="submit" class="btn btn-primary">Search</button>
             </div>
@@ -44,7 +44,7 @@
 %include pagination
 
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/main.js"></script>
 

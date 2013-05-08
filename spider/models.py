@@ -31,7 +31,7 @@ class DictSerializable(object):
 #        del tmp['_sa_instance_state']
 #        return json.dumps(tmp)
 
-class Control(Base):
+class Control(Base, DictSerializable):
     """"""
     __tablename__ = 'control'
 
@@ -71,7 +71,7 @@ class Files(Base, DictSerializable):
     removed = Column(Integer(10))
     meta = relationship("Metadata", uselist=False, backref="files")
 
-class Metadata(Base):
+class Metadata(Base, DictSerializable):
     """"""
     __tablename__ = 'meta'
 
@@ -106,7 +106,7 @@ class Metadata(Base):
     auto = Column(Integer)
     flag = Column(Integer)
 
-class TmpFiles(Base):
+class TmpFiles(Base, DictSerializable):
     """"""
     __tablename__ = 'tmp'
 

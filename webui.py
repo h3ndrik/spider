@@ -30,10 +30,15 @@ def favicon():
 #    result = session.query(Files).filter(Files.filename.like('%'+q+'%')).all()
 #    return template('make_table', rows=result)
 
-#@app.route('/show/<id:int>')
-#def show(id=None):
-#    assert isinstance(id, int)
-#    return "Not implemented!"
+@app.route('/api/detail/<id:int>')
+def detail(id=None):
+    assert isinstance(id, int)
+    filedetail = session.query(Files).filter(Files.id == id).one()
+    try:
+        filemeta = session.query(Metadata).filter(Metadata.id == id).one()
+    except:
+        filemeta = Metadata()
+    return {'detail': filedetail._asdict(), 'meta': filemeta._asdict()}
 
 @app.route('/api/search/')
 def api_search():
@@ -65,6 +70,10 @@ def js_static(filename):
 @app.route('/img/<filename>')
 def img_static(filename):
     return static_file(filename, root='./webui/img')
+
+@app.route('/img/mime/<filename>')
+def img_mime_static(filename):
+    return static_file(filename, root='./webui/img/mime')
 
 @app.route('/css/<filename>')
 def img_static(filename):
