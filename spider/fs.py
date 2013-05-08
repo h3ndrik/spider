@@ -60,15 +60,23 @@ class FS(object):
         for dir, subdirs, files in os.walk(self.directory.encode(fs_enc)):
             logging.debug(''.join(["Reading dir: ", dir.decode(fs_enc, 'replace')]))
             for subdir in subdirs:
-                filename = os.path.join(dir, subdir)
-                mtime = os.stat(filename).st_mtime
-                item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
-                self.db.add(item)
+                try:
+#                  if not os.path.ismount(os.path.join(dir, subdir)):
+#                    logging.warning('mountpoint?')
+                  filename = os.path.join(dir, subdir)
+                  mtime = os.stat(filename).st_mtime
+                  item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
+                  self.db.add(item)
+                except:
+                  logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
             for file in files:
-                filename = os.path.join(dir, file)
-                mtime = os.stat(filename).st_mtime
-                item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
-                self.db.add(item)
+                try:
+                  filename = os.path.join(dir, file)
+                  mtime = os.stat(filename).st_mtime
+                  item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
+                  self.db.add(item)
+                except:
+                  logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
 
             #if '.git' in subdirs:
                 #TODO: prune directories

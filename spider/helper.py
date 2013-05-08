@@ -62,10 +62,13 @@ def parse_args():
 
     logger = logging.getLogger()
 
-    if args.verbose >= 2:
+    if args.verbose >= 3:
         logging.basicConfig(level=logging.DEBUG)  # Log everything, and send it to stderr.
         logger.setLevel(logging.DEBUG)
         logging.debug("Debug output enabled")
+    elif args.verbose >= 2:
+        logging.basicConfig(level=logging.INFO)  # Log everything, and send it to stderr.
+        logger.setLevel(logging.INFO)
     elif args.verbose >= 1:
         logging.basicConfig(level=logging.WARNING)  # Log everything, and send it to stderr.
         logger.setLevel(logging.WARNING)
