@@ -21,12 +21,12 @@ function query() {
 
 	var q = $("input:first").val();
 	$.getJSON('/api/search/?q=' + q, function (data) {
-		var items = [];
-
+		//var items = [];
+		results.empty()
 		$.each(data, function(key, val) {
 			if (key == 'results') {
 				$.each(val, function(key, val) {
-					results.append($('<tr>').append($('<td>').text(val.filename)));
+					results.append($('<tr>').append($('<td>').text(val.filename)).append($('<td>').text(val.mtime)));
 				});
 			}
 

@@ -22,8 +22,8 @@
       <table class="table table-striped table-bordered">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Title</th>
+            <th>Filename</th>
+            <th>MTime</th>
           </tr>
         </thead>
         <tbody id="results">

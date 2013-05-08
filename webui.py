@@ -45,8 +45,8 @@ def api_search():
     if result:
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
         return {'num_results': str(result.count()), 'results': [file._asdict() for file in result[start:start+num]]}
-    else:
-        abort(400, 'Query \"' + q + '\" Returned no results')
+    else: # TODO isn't reached?!
+        abort(400, {'num_results': '0'})
 
 @app.route('/api/new/')
 def api_new():
