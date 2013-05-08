@@ -3,33 +3,42 @@
 
     <div class="container">
 
-      <h1>Suche</h1>
-      <p>Beispiel für ein einfaches Suchformular.</p>
+      <div class="container" id="div_logo">
+        <!--<a href="/"><img src="img/logo.png"/></a>-->
+        <h1>Suche</h1>
+      </div>
 
-      <!-- Suchformular mit Eingabefeld und Button -->
-      <form class="well form-search" id="search" action="javascript:query()">
-        <fieldset>
-          <div class="input-append">
-            <input type="text" class="input-block-level search-query">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </div>
-        </fieldset>
-      </form>
- 
-      <h2>Ergebnisse</h2>
- 
-      <!-- Tabelle mit abwechselnder Zellenhintergrundfarbe und Außenrahmen -->
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>Filename</th>
-            <th>MTime</th>
-          </tr>
-        </thead>
-        <tbody id="results">
+      <div class="container" id="div_message">
+        <p>Beta</p>
+      </div>
 
-        </tbody>
-      </table>
+      <div class="container" id="div_search">
+        <form class="well form-search" id="search" action="javascript:query()">
+          <fieldset>
+            <div class="input-append">
+              <input type="text" class="input-block-level search-query">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div class="container" id="div_results">
+        <h2>Ergebnisse</h2>
+        <!-- Tabelle mit abwechselnder Zellenhintergrundfarbe und Außenrahmen -->
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Icon</th>
+              <th>Filename</th>
+            </tr>
+          </thead>
+          <tbody id="results">
+
+          </tbody>
+        </table>
+      </div>
+
     </div> <!-- /container -->
 
 %include pagination

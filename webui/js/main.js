@@ -26,7 +26,20 @@ function query() {
 		$.each(data, function(key, val) {
 			if (key == 'results') {
 				$.each(val, function(key, val) {
-					results.append($('<tr>').append($('<td>').text(val.filename)).append($('<td>').text(val.mtime)));
+					results.append($('<tr>')
+						.append($('<td>')
+							.append($('<span>').text('icon'))
+							.append($('<br/>'))
+							.append($('<span>').text('['+val.category+']'))
+						)
+						.append($('<td>')
+							.append($('<span>').text(val.filename))
+							.append($('<br/>'))
+							.append($('<span>', {'class': 'pull-left'}).text(val.size))
+							.append($('<span>').text(val.filename))
+							.append($('<span>', {'class': 'pull-right'}).text(val.mtime))
+						)
+					);
 				});
 			}
 
