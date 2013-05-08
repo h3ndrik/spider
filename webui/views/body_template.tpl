@@ -8,7 +8,7 @@
         <h1 class="text-center">Suche</h1>
       </div>
 
-      <div class="container" id="div_message">
+      <div class="container text-center" id="div_message">
         <p>Beta</p>
       </div>
 

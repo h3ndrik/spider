@@ -1,7 +1,7 @@
 function go_home() {
 	$('#div_search').show();
 	$('#results').empty();
-	$('#div_results').show();
+	$('#div_results').hide();
 	$('#btn_home').attr('class', 'active');
 	$('#btn_search').attr('class', '');
 	$('#btn_new').attr('class', '');
@@ -9,15 +9,16 @@ function go_home() {
 
 function go_search() {
 	$('#div_search').show();
-	$('#div_results').show();
+//	$('#div_results').show();
 	$('#btn_home').attr('class', '');
 	$('#btn_search').attr('class', 'active');
 	$('#btn_new').attr('class', '');
+	query();
 }
 
 function go_new() {
 	$('#div_search').hide();
-	$('#div_results').show();
+//	$('#div_results').show();
 	$('#btn_home').attr('class', '');
 	$('#btn_search').attr('class', '');
 	$('#btn_new').attr('class', 'active');
@@ -83,9 +84,14 @@ function query() {
 	var table = $('#results');
 
 	var q = $("input:first").val();
+
+	if (!q || 0 === q.length) {
+		table.empty();
+		return false;
+	}
+
 	$.getJSON('/api/search/?q=' + q, function (data) {
-		//var items = [];
-		table.empty()
+		table.empty();
 		$('#div_results').show();
 		$.each(data, function(key, val) {
 			if (key == 'results') {
