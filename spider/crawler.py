@@ -16,7 +16,7 @@ class Crawler:
 
     def add(self, args):
         """add name directory mountpoint"""
-        item = Control(args.name, args.directory, args.mountpoint)
+        item = Control(args.name, args.directory, args.mountpoint, args.hash)
         self.db.add(item)
         self.db.session.commit()
     def delete(self, args):
@@ -50,10 +50,16 @@ class Crawler:
             items = self.db.getJobs()
         for item in items:
             logging.info('Starting crawl of: ' + item.name)
+            if hasattr(args, "hash"):
+                hashalgorithm = args.hash
+                if not args.hash == item.hashalgorithm:
+                    logging.warning('Selected hash-algorithm does not match configured one')
+            else:
+                hashalgorithm = "md5"
             try:
                 self.check(item.name)
                 self.db.lock(item)
-                fs = FS(self.db, item)
+                fs = FS(self.db, item, hashalgorithm)
                 self.db.unlock(item)
                 fs.walk()
             except CrawlerError:

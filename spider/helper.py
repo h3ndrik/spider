@@ -2,7 +2,7 @@ import logging
 import hashlib
 import argparse
 
-def hashsum(filename, blocksize=65536):
+def md5sum(filename, blocksize=65536):
     h = hashlib.md5()
     f = open(filename, 'rb', encoding=None)
     buf = f.read(blocksize)
@@ -10,6 +10,9 @@ def hashsum(filename, blocksize=65536):
         h.update(buf)
         buf = f.read(blocksize)
     return h.hexdigest()
+
+def nonesum(filename, blocksize=65536):
+    return None
 
 def parse_args():
     """
@@ -29,6 +32,8 @@ def parse_args():
                    help='directory to crawl')
     parser_add.add_argument('mountpoint',
                    help='only crawl if mountpoint is mounted')
+    parser_add.add_argument("--hash", default="md5",
+                   help="specify hash algorithm or \'none\'")
     #parser_add.set_defaults(func=add)
 
     parser_del = subparsers.add_parser('del', help='remove directory from crawl')
@@ -53,6 +58,8 @@ def parse_args():
     parser_crawl = subparsers.add_parser('crawl', help='start a single crawl')
     parser_crawl.add_argument('--name',
                    help='only crawl name')
+    parser_crawl.add_argument("--hash", default="md5",
+                   help="specify hash algorithm or \'none\'")
     #parser_add.set_defaults(func=crawl)
 
     parser_crawl = subparsers.add_parser('list', help='list configured directories')

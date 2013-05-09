@@ -5,19 +5,27 @@ import mimetypes
 mimetypes.init()
 from spider.db import DB
 from spider.models import Control, Files, TmpFiles
-from spider.helper import hashsum
+from spider.helper import md5sum, nonesum
 from spider.meta import Meta
 
 class FS(object):
     """All Filesystem interaction"""
 
-    def __init__(self, db, control):
+    def __init__(self, db, control, hashalgorithm='md5'):
         self.db = db
         self.control = control
         self.directory = control.directory
         self.category = control.name
         self.meta = Meta(self.db, control.name)
         self.timeout = 2592000
+        if hashalgorithm == 'md5' or hashalgorithm == 'md5sum':
+            self.hashsum = md5sum
+        elif hashalgorithm == 'none' or hashalgorithm == 'None':
+            logging.info('Not computing hashsums')
+            self.hashsum = nonesum
+        else:
+            self.hashsum = nonesum
+            raise(Exception('Hash algorithm not implemented'))
 
     def walk(self):
         """execute subroutines of filecrawler"""
@@ -92,7 +100,7 @@ class FS(object):
         if os.path.isfile(filename):
             logging.debug(''.join(["Updating(New): ", filename]))
             (mime, encoding) = mimetypes.guess_type(filename)
-            hash = hashsum(filename)
+            hash = self.hashsum(filename)
             removed = None
         elif os.path.isdir:
             logging.debug(''.join(["Updating(New,Dir): ", filename]))

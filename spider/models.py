@@ -37,15 +37,17 @@ class Control(Base, DictSerializable):
 
     name = Column(String, primary_key=True)
     directory = Column(String)
+    hashalgorithm = Column(String)
     crawl = Column(Integer)
     needsmountpoint = Column(String)
     errors = Column(Integer)
     last_crawl = Column(Integer(10))
     pid_lock = Column(Integer)
 
-    def __init__(self, name, directory, needsmountpoint):
+    def __init__(self, name, directory, needsmountpoint, hashalgorithm='md5'):
         self.name = name
         self.directory = directory
+        self.hashalgorithm = hashalgorithm
         self.needsmountpoint = needsmountpoint
         self.crawl = 1
         self.errors = 0
@@ -53,7 +55,7 @@ class Control(Base, DictSerializable):
         self.pid_lock = 0
 
     def __repr__(self):
-        return "<Control('%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (self.name, self.directory, self.needsmountpoint, self.crawl, self.errors, self.last_crawl, self.pid_lock)
+        return "<Control('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (self.name, self.directory, self.needsmountpoint, self.hashalgorithm, self.crawl, self.errors, self.last_crawl, self.pid_lock)
 
 
 class Files(Base, DictSerializable):
