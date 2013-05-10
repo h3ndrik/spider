@@ -38,7 +38,7 @@
 %    start = None
 %    num = None
 %end
-%query = query or ''
-%include pagination num_results=num_results, start=start, num=num, query=query
+%q = q or ''
+%include pagination num_results=num_results, start=start, num=num, q=q
 
   </body>

@@ -13,18 +13,18 @@
 %            skipl = ''
 %        end
 %        if cur_page < max_page-len(items):
-             skipr = ''
+%            skipr = ''
 %        end
   <ul>
-    <li class="{{skipl}}"><a href="#?q={{query}}&num={{num}}&start={{cur_page-1}}">&laquo;</a></li>
+    <li class="{{skipl}}"><a href="?q={{q}}&num={{num}}&start={{cur_page-1*num}}">&laquo;</a></li>
 %        for i in items:
 %            if i==cur_page:
-    <li class="active"><a href="#?q={{query}}&num={{num}}&start={{i}}">{{i}}</a></li>
+    <li class="active"><a href="?q={{q}}&num={{num}}&start={{i*num}}">{{i}}</a></li>
 %            else:
-    <li class=""><a href="#?q={{query}}&num={{num}}&start={{i}}">{{i}}</a></li>
+    <li class=""><a href="?q={{q}}&num={{num}}&start={{i*num}}">{{i}}</a></li>
 %            end
 %        end
-    <li class="{{skipr}}"><a href="#?q={{query}}&num={{num}}&start={{cur_page+1}}">Next</a></li>
+    <li class="{{skipr}}"><a href="?q={{q}}&num={{num}}&start={{cur_page+1*num}}">Next</a></li>
   </ul>
 %    end
 %except NameError:

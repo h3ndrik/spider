@@ -25,12 +25,18 @@ def favicon():
 @app.route('/search/')
 @app.route('/suche/')
 def suche():
-    return template('index', title='Spider Search', results=api_search(), query=request.query.q)
+    q = request.query.q
+    start = int(request.query.start or 0)
+    num = int(request.query.num or 20)
+    return template('index', title='Spider Search', results=api_search(start=start, num=num, q=q), query=q)
 
 @app.route('/new/')
 @app.route('/neues/')
 def neues():
-    return template('index', title='Spider Search', results=api_new())
+    start = int(request.query.start or 0)
+    num = int(request.query.num or 20)
+    print('start: ' + request.query.start)
+    return template('index', title='Spider Search', results=api_new(start=start, num=num))
 
 @app.route('/detail/<id:int>')
 def detail(id=None):
@@ -44,11 +50,14 @@ def api_detail(id=None):
     return {'detail': filedetail._asdict(), 'meta': [meta._asdict() for meta in filemeta]}
 
 @app.route('/api/search/')
-def api_search():
-    q = request.query.q
-    #q_test = request.GET.get('q', '').strip()
-    start = int(request.query.start or 0)
-    num = int(request.query.num or 20)
+def api_search(q=None, start=None, num=None):
+    if not q:
+        q = request.query.q
+        #q_test = request.GET.get('q', '').strip()
+    if not start:
+        start = int(request.query.start or 0)
+    if not num:
+        num = int(request.query.num or 20)
     result = session.query(Files).filter(Files.filename.like('%'+q+'%'))
     if result:
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
@@ -57,9 +66,11 @@ def api_search():
         abort(400, {'num_results': '0'})
 
 @app.route('/api/new/')
-def api_new():
-    start = int(request.query.start or 0)
-    num = int(request.query.num or 20)
+def api_new(start=None, num=None):
+    if not start:
+        start = int(request.query.start or 0)
+    if not num:
+        num = int(request.query.num or 20)
     result = session.query(Files).order_by(Files.mtime)
     if result:
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}

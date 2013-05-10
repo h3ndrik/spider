@@ -15,14 +15,14 @@
 %    results = None
 %end
 %try:
-%    if query:
+%    if q:
 %        pass
 %    end
 %except NameError:
-%    query = None
+%    q = None
 %end
 %include header_template title=title
-%include body_template title=title, filedetail=filedetail, results=results, query=query
+%include body_template title=title, filedetail=filedetail, results=results, q=q
 </html>
 
 
