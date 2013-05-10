@@ -29,6 +29,16 @@
 
     </div> <!-- /container -->
 
-%include pagination
+%if results:
+%    num_results=results['num_results'] or None
+%    start=results['start'] or None
+%    num=results['num'] or None
+%else:
+%    num_results = None
+%    start = None
+%    num = None
+%end
+%query = query or ''
+%include pagination num_results=num_results, start=start, num=num, query=query
 
   </body>

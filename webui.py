@@ -25,7 +25,7 @@ def favicon():
 @app.route('/search/')
 @app.route('/suche/')
 def suche():
-    return template('index', title='Spider Search', results=api_search())
+    return template('index', title='Spider Search', results=api_search(), query=request.query.q)
 
 @app.route('/new/')
 @app.route('/neues/')
@@ -52,7 +52,7 @@ def api_search():
     result = session.query(Files).filter(Files.filename.like('%'+q+'%'))
     if result:
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
-        return {'num_results': str(result.count()), 'results': [file._asdict() for file in result[start:start+num]]}
+        return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else: # TODO isn't reached?!
         abort(400, {'num_results': '0'})
 
@@ -62,7 +62,7 @@ def api_new():
     num = int(request.query.num or 20)
     result = session.query(Files).order_by(Files.mtime)
     if result:
-        return {'num_results': str(result.count()), 'results': [file._asdict() for file in result[start:start+num]]}
+        return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else:
         abort(400, 'Nothing found')
 
