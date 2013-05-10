@@ -16,7 +16,7 @@ from spider.crawler import Crawler
     :license: WTFTPL, see LICENSE for more details.
 """
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 
 def interrupthandler(signum, frame):

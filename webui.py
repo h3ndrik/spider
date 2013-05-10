@@ -34,7 +34,7 @@ def neues():
 
 @app.route('/detail/<id:int>')
 def detail(id=None):
-    return template('detail', title='Spider Search', rows=api_detail(id))
+    return template('index', title='Spider Search', filedetail=api_detail(id))
 
 @app.route('/api/detail/<id:int>')
 def api_detail(id=None):

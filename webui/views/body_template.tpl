@@ -23,32 +23,12 @@
         </form>
       </div>
 
-      <div class="container" id="div_results">
-        <h2>Ergebnisse</h2>
-        <!-- Tabelle mit abwechselnder Zellenhintergrundfarbe und Außenrahmen -->
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Icon</th>
-              <th>Filename</th>
-            </tr>
-          </thead>
-          <tbody id="results">
+%include div_results
 
-          </tbody>
-        </table>
-      </div>
-
-      <div class="container" id="div_detail">
-      </div>
+%include div_detail filedetail=filedetail
 
     </div> <!-- /container -->
 
 %include pagination
-
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
 
   </body>

@@ -6,6 +6,10 @@
     <meta name="author" content="">
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Place at the end of the document (before </body>) so the pages load faster -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
 
     <style>
       body {

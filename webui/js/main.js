@@ -28,6 +28,15 @@ function go_new() {
 	get_new();
 }
 
+function go_detail() {
+	$('#div_search').hide();
+	$('#div_results').hide();
+	$('#div_detail').show();
+	$('#btn_home').attr('class', '');
+	$('#btn_search').attr('class', '');
+	$('#btn_new').attr('class', '');
+}
+
 function size2human(size) {
     var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     var i = 0;
@@ -97,7 +106,7 @@ function append_result(item, table) {
 		.append($('<td>')
 			.append($('<span>')
 				.append($('<a>', {href: link})
-					.append($('<img/>', {src:'img'+icon}))
+					.append($('<img/>', {src:'/img'+icon}))
 				)
 			)
 			.append($('<br/>'))
