@@ -88,6 +88,7 @@ class Metadata(Base, DictSerializable):
     #year = Column(Integer)
     #month = Column(Integer)
     #day = Column(Integer)
+    language = Column(String)
     duration = Column(Integer)
     resolution = Column(String)
     codec = Column(String)

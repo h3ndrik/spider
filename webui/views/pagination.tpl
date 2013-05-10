@@ -7,6 +7,9 @@
 %        max_page = int(num_results//num)
 %        skipl = 'disabled'
 %        skipr = 'disabled'
+%###################################TODO##################################
+%#http://flask.pocoo.org/snippets/44/
+%#http://codereview.stackexchange.com/questions/15235/how-to-generate-numbers-for-pagination
 %        items = [cur_page-10, cur_page-2, cur_page-1, cur_page, cur_page+1, cur_page+2, cur_page+10, cur_page+50]
 %        items = [item for item in items if item >= 0 and item <= max_page]
 %        if cur_page > len(items):

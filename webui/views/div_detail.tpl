@@ -15,7 +15,7 @@
               <td>
 %    if detail['mime'].startswith('video'):
                 <video width="300" height="200" controls>
-                  <source src="{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                  <source src="file://{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
 %    elif detail['mime'].startswith('image'):
@@ -39,6 +39,7 @@
                   <li>Collection: {{meta['collection']}}</li>
 %        end
                   <li>Duration: {{meta['duration']}}</li>
+                  <li>Language: {{meta['language']}}</li>
                   <li>Resolution: {{meta['resolution']}}</li>
                   <li>Codec: {{meta['codec']}}</li>
                   <li>Quality: {{meta['quality']}}</li>

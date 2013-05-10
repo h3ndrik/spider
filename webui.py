@@ -71,7 +71,7 @@ def api_new(start=None, num=None):
         start = int(request.query.start or 0)
     if not num:
         num = int(request.query.num or 20)
-    result = session.query(Files).order_by(Files.mtime)
+    result = session.query(Files).order_by(Files.mtime.desc())
     if result:
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else:
