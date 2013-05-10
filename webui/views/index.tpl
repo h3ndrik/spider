@@ -7,8 +7,15 @@
 %except NameError:
 %    filedetail = None
 %end
+%try:
+%    if results:
+%        pass
+%    end
+%except NameError:
+%    results = None
+%end
 %include header_template title=title
-%include body_template title=title, filedetail=filedetail
+%include body_template title=title, filedetail=filedetail, results=results
 </html>
 
 

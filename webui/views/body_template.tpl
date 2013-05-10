@@ -23,7 +23,7 @@
         </form>
       </div>
 
-%include div_results
+%include div_results results=results
 
 %include div_detail filedetail=filedetail
 

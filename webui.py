@@ -25,12 +25,12 @@ def favicon():
 @app.route('/search/')
 @app.route('/suche/')
 def suche():
-    return template('search', rows=api_search())
+    return template('index', title='Spider Search', results=api_search())
 
 @app.route('/new/')
 @app.route('/neues/')
 def neues():
-    return template('search', rows=api_new())
+    return template('index', title='Spider Search', results=api_new())
 
 @app.route('/detail/<id:int>')
 def detail(id=None):

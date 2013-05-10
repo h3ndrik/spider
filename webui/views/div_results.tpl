@@ -10,6 +10,45 @@
           </thead>
           <tbody id="results">
 
+%try:
+%    if results:
+%    from spider.helper import size2human, timestamp2human
+%    import os.path
+%        for result in results['results']:
+%            if result['mime']:
+%                icon = '/img/mime/' + result['mime'].split('/', 1)[0] + '.png'
+%            else:
+%                icon = '/img/mime/' + 'unknown' + '.png'
+%            end
+%            filename = os.path.basename(result['filename'])
+%            path = os.path.dirname(result['filename'])
+%            size = size2human(result['size'])
+%            age = timestamp2human(result['mtime'])
+            <tr>
+              <td>
+                <span>
+                  <a href="/detail/{{result['id']}}">
+                    <img src="{{icon}}" />
+                  </a>
+                </span><br />
+                <span>[{{result['category']}}]</span>
+              </td>
+              <td>
+                <span>
+                  <a href="/detail/{{result['id']}}">{{filename}}</a>
+                </span><br />
+                <span class="pull-left span1">{{size}}</span>
+                <span>{{path}}</span>
+                <span class="pull-right">{{age}}</span>
+              </td>
+            </tr>
+%        end
+
+%    end
+%except NameError:
+%    pass
+%end
+
           </tbody>
         </table>
       </div>

@@ -6,7 +6,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#" onclick="go_home()">{{title}}</a>
+          <a class="brand" href="/#" onclick="go_home()">{{title}}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active" id="btn_home"><a href="/#" onclick="go_home()">Home</a></li>
