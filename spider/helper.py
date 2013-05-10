@@ -89,7 +89,7 @@ def parse_args():
     parser_crawl = subparsers.add_parser('crawl', help='start a single crawl')
     parser_crawl.add_argument('--name',
                    help='only crawl name')
-    parser_crawl.add_argument("--hash", default="md5",
+    parser_crawl.add_argument("--hash",
                    help="specify hash algorithm or \'none\'")
     #parser_add.set_defaults(func=crawl)
 

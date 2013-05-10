@@ -50,12 +50,13 @@ class Crawler:
             items = self.db.getJobs()
         for item in items:
             logging.info('Starting crawl of: ' + item.name)
-            if hasattr(args, "hash"):
+            if hasattr(args, "hash") and args.hash:
                 hashalgorithm = args.hash
+                logging.info('User selected hash-method: ' + args.hash)
                 if not args.hash == item.hashalgorithm:
                     logging.warning('Selected hash-algorithm does not match configured one')
             else:
-                hashalgorithm = "md5"
+                hashalgorithm = item.hashalgorithm
             try:
                 self.check(item.name)
                 self.db.lock(item)
