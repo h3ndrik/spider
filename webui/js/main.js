@@ -2,6 +2,7 @@ function go_home() {
 	$('#div_search').show();
 	$('#results').empty();
 	$('#div_results').hide();
+	$('#div_detail').hide();
 	$('#btn_home').attr('class', 'active');
 	$('#btn_search').attr('class', '');
 	$('#btn_new').attr('class', '');
@@ -10,6 +11,7 @@ function go_home() {
 function go_search() {
 	$('#div_search').show();
 //	$('#div_results').show();
+	$('#div_detail').hide();
 	$('#btn_home').attr('class', '');
 	$('#btn_search').attr('class', 'active');
 	$('#btn_new').attr('class', '');
@@ -19,6 +21,7 @@ function go_search() {
 function go_new() {
 	$('#div_search').hide();
 //	$('#div_results').show();
+	$('#div_detail').hide();
 	$('#btn_home').attr('class', '');
 	$('#btn_search').attr('class', '');
 	$('#btn_new').attr('class', 'active');

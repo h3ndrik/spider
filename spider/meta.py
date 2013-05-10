@@ -24,7 +24,7 @@ class Meta(object):
     def insertmeta(self, filename, id):
         """gather metadata for 'filename' and write to metadata table"""
         if os.path.splitext(filename)[1].strip().lower() in strings['filetype_video']:
-            filetype = 'video'
+            filetype = 'tv_show'
             for regex in self.tv_regexs:
                 match = regex.match(os.path.basename(filename))
                 if match:

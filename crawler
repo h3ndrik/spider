@@ -26,7 +26,7 @@ def interrupthandler(signum, frame):
 if __name__ == "__main__":
 
     # Startup
-    logging.info("=== Crawler v." + __version__ + " ===")
+    logging.info("=== Spider v." + __version__ + " ===")
     if os.geteuid() == 0:
         logging.warning("Warning, running as root")
     os.nice(19)

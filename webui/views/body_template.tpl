@@ -39,7 +39,7 @@
         </table>
       </div>
 
-      <div class="container" id="detail">
+      <div class="container" id="div_detail">
       </div>
 
     </div> <!-- /container -->

@@ -2,6 +2,37 @@ import logging
 import hashlib
 import argparse
 
+from time import time
+from datetime import timedelta
+
+def timestamp2human(timestamp):
+    delta = time() - timestamp
+    attrs = {'a':365.25*86400, 'd':86400, 'h':3600, 'min':60, 's':1}
+    if delta < 0:
+        delta = 0 - delta
+        suffix = 'ahead'
+    else:
+        suffix = 'ago'
+    output = ''
+    for key in sorted(attrs, key=attrs.get, reverse=True):
+        i = int(delta // attrs[key])
+        delta %= attrs[key]
+        if output == '':
+            if i > 1:
+                output = str(i) + key
+        else:
+            output = output + ' ' + str(i) + key
+            return output + ' ' + suffix
+    return output + ' ' + suffix
+
+def size2human(num):
+    for x in ['B','KB','MB','GB']:
+        if num < 1024.0 and num > -1024.0:
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+    return "%3.1f %s" % (num, 'TB')
+
+
 def md5sum(filename, blocksize=65536):
     h = hashlib.md5()
     f = open(filename, 'rb', encoding=None)

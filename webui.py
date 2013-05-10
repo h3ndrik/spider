@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext import serializer
 import logging
 from spider.models import *
+from spider.helper import size2human, timestamp2human
 
 app = Bottle()
 
@@ -21,17 +22,22 @@ def index():
 def favicon():
     return static_file('favicon.ico', root='./webui/img')
 
-#@app.route('/search/')
-#@app.route('/suche/<query>')
-#def suche():
-#    q = request.query.q or ''
-#    start = request.query.start or 1
-#    num = request.query.num or 10
-#    result = session.query(Files).filter(Files.filename.like('%'+q+'%')).all()
-#    return template('make_table', rows=result)
+@app.route('/search/')
+@app.route('/suche/')
+def suche():
+    return template('search', rows=api_search())
+
+@app.route('/new/')
+@app.route('/neues/')
+def neues():
+    return template('search', rows=api_new())
+
+@app.route('/detail/<id:int>')
+def detail(id=None):
+    return template('detail', title='Spider Search', rows=api_detail(id))
 
 @app.route('/api/detail/<id:int>')
-def detail(id=None):
+def api_detail(id=None):
     assert isinstance(id, int)
     filedetail = session.query(Files).filter(Files.id == id).one()
     filemeta = session.query(Metadata).filter(Metadata.id == id)
