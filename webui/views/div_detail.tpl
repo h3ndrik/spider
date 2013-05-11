@@ -14,10 +14,23 @@
             <tr>
               <td>
 %    if detail['mime'].startswith('video'):
-                <video width="300" height="200" controls>
-                  <source src="file://{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                <video width="640" height="390" controls>
+                  <source src="/file/{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
+                <!-- test
+<OBJECT classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" width="640" height="480" id="vlcviewerie">
+<param name="MRL" value="/file/{{filedetail['detail']['filename']}}" />
+<param name="ShowDisplay" value="False" />
+<param name="AutoLoop" value="False" />
+<param name="AutoPlay" value="True" />
+<param name="Volume" value="100" />
+<param name="toolbar" value="true" />
+<embed type="application/x-vlc-plugin" src="/file/{{filedetail['detail']['filename']}}" pluginspage="http://www.videolan.org" version="VideoLAN.VLCPlugin.2" id="vlcviewer" autostart="1" loop="no" width="640" height="480" toolbar="true"></embed>
+<noembed>VLC Plugin nicht gefunden..</noembed>
+</OBJECT>
+                 ende test -->
+
 %    elif detail['mime'].startswith('image'):
                 <img src="{{filedetail['detail']['filename']}}" width="300" height="200"/>
 %    end

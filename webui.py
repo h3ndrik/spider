@@ -83,19 +83,19 @@ def api_new(start=None, num=None):
     else:
         abort(400, 'Nothing found')
 
-@app.route('/js/<filename>')
+@app.route('/file/<filename:path>')
+def file_static(filename):
+    return static_file(filename, root='/')
+
+@app.route('/js/<filename:path>')
 def js_static(filename):
     return static_file(filename, root='./webui/js')
 
-@app.route('/img/<filename>')
+@app.route('/img/<filename:path>')
 def img_static(filename):
     return static_file(filename, root='./webui/img')
 
-@app.route('/img/mime/<filename>')
-def img_mime_static(filename):
-    return static_file(filename, root='./webui/img/mime')
-
-@app.route('/css/<filename>')
+@app.route('/css/<filename:path>')
 def img_static(filename):
     return static_file(filename, root='./webui/css')
 
