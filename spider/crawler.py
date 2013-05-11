@@ -41,7 +41,7 @@ class Crawler:
     def list(self, args):
         """list"""
         for item in self.db.session.query(Control):
-            print("Name: \"" + item.name + "\", Directory: \"" + item.directory + "\", NeedsMointpoint: \"" + item.needsmountpoint + "\", Enabled: " + str(item.crawl))
+            print("Name: \"" + item.name + "\", Directory: \"" + item.directory + "\", NeedsMointpoint: \"" + item.needsmountpoint + "\", Enabled: " + str(item.crawl) + ", Hash: " + item.hashalgorithm)
     def crawl(self, args):
         """crawl"""
         if hasattr(args, "name"):

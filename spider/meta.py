@@ -41,20 +41,20 @@ class Meta(object):
         else:
             filetype = 'other'
             regexs = []
+        match = None
 
         for regex in regexs:
             match = regex.match(filename)
             if match:
                 source = None # TODO
                 keys = match.groupdict().keys()
-                item = Metadata(id=id)
+                item = Metadata(id=id, source=source)
                 for key in keys:
                     if hasattr(item, key):
-                        item[key] = match.group(key)
+                        setattr(item, key, match.group(key))
                     else:
                         logging.info('Database has no column for %r' % key)
                 self.db.add(item)
-                return   # break on first match
         if not match:
             logging.info('No regex matched on %r' % filename)
 

@@ -77,8 +77,8 @@ class Metadata(Base, DictSerializable):
     """indirect and user-generated attributes of file"""
     __tablename__ = 'meta'
 
-    id = Column(Integer, ForeignKey('files.id'),  primary_key=True)
-    #id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('files.id'))
+    metaid = Column(Integer, primary_key=True)
     filetype = Column(String)
     seriesname = Column(String)
     seasonnumber = Column(Integer)

@@ -32,6 +32,7 @@ class FS(object):
         logging.info('Reading Filesystem')
         self.read_fs()
         logging.info('Computing new files')
+################################# TODO Repair regex!!! ###########################
         items = self.db.session.query(TmpFiles).outerjoin((Files, TmpFiles.filename == Files.filename)).\
                                                 filter(Files.filename == None).\
                                                 filter(Files.removed == None).all()
@@ -41,7 +42,7 @@ class FS(object):
             #logging.debug('Analyzing: ' + item.filename)
             try:
                 self.insertfile(item.filename)
-            except:
+            except FileNotFoundError:
                 #TODO: insert with flag set
                 logging.warning('Could not insert file. Probably bad encoding?')
                 self.control.errors += 1
@@ -50,7 +51,9 @@ class FS(object):
         self.db.session.commit()
 
         logging.info('Computing deleted files')
-        items = self.db.session.query(Files).outerjoin((TmpFiles, Files.filename == TmpFiles.filename)).\
+################################# TODO Repair regex!!! ###########################
+        items = self.db.session.query(Files).filter(Files.category == self.category).\
+                                             outerjoin((TmpFiles, Files.filename == TmpFiles.filename)).\
                                                 filter(TmpFiles.filename == None).\
                                                 filter(Files.removed == None).all()
         logging.info('Removing')
@@ -78,7 +81,7 @@ class FS(object):
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                     self.db.add(item)
-                except:
+                except FileNotFoundError:
                     logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
             for file in files:
                 try:
@@ -86,7 +89,7 @@ class FS(object):
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                     self.db.add(item)
-                except:
+                except FileNotFoundError:
                     logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
 
             #if '.git' in subdirs:
