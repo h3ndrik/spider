@@ -1,3 +1,14 @@
+%if results:
+%    num_results=results['num_results'] or None
+%    start=results['start'] or 0
+%    num=results['num'] or 20
+%else:
+%    num_results = None
+%    start = start or 0
+%    num = num or 20
+%end
+%q = q or ''
+
   <body>
 %include navbar title=title
 
@@ -13,10 +24,12 @@
       </div>
 
       <div class="container" id="div_search">
-        <form class="well form-search" id="search" action="javascript:query()">
+        <form class="well form-search" id="search" action="/suche/">
           <fieldset>
             <div class="input-append span8">
-              <input type="text" class="input-block-level search-query">
+              <input type="text" class="input-block-level search-query" name="q" value="{{q}}">
+              <!--<input name="start" type=hidden value="{{start}}">-->
+              <!--<input name="num" type=hidden value="{{num}}">-->
               <button type="submit" class="btn btn-primary">Search</button>
             </div>
           </fieldset>
@@ -29,16 +42,6 @@
 
     </div> <!-- /container -->
 
-%if results:
-%    num_results=results['num_results'] or None
-%    start=results['start'] or None
-%    num=results['num'] or None
-%else:
-%    num_results = None
-%    start = None
-%    num = None
-%end
-%q = q or ''
 %include pagination num_results=num_results, start=start, num=num, q=q
 
   </body>

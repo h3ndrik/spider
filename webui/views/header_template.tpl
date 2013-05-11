@@ -9,7 +9,7 @@
     <!-- Place at the end of the document (before </body>) so the pages load faster -->
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/spider.main.js"></script>
 
     <style>
       body {

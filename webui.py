@@ -24,18 +24,21 @@ def favicon():
 
 @app.route('/search/')
 @app.route('/suche/')
+@app.route('/search')
+@app.route('/suche')
 def suche():
     q = request.query.q
     start = int(request.query.start or 0)
     num = int(request.query.num or 20)
-    return template('index', title='Spider Search', results=api_search(start=start, num=num, q=q), query=q)
+    return template('index', title='Spider Search', results=api_search(start=start, num=num, q=q), q=q)
 
 @app.route('/new/')
 @app.route('/neues/')
+@app.route('/new')
+@app.route('/neues')
 def neues():
     start = int(request.query.start or 0)
     num = int(request.query.num or 20)
-    print('start: ' + request.query.start)
     return template('index', title='Spider Search', results=api_new(start=start, num=num))
 
 @app.route('/detail/<id:int>')
@@ -58,7 +61,10 @@ def api_search(q=None, start=None, num=None):
         start = int(request.query.start or 0)
     if not num:
         num = int(request.query.num or 20)
-    result = session.query(Files).filter(Files.filename.like('%'+q+'%'))
+    if q == '':
+        return {'num_results':0, 'start':start, 'num':num, 'results': []}
+    else:
+        result = session.query(Files).filter(Files.filename.like('%'+q+'%'))
     if result:
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}

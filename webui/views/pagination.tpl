@@ -12,7 +12,7 @@
 %#http://flask.pocoo.org/snippets/44/
 %#http://codereview.stackexchange.com/questions/15235/how-to-generate-numbers-for-pagination
 %        if cur_page < num_pagenumbers//2:
-%            pagenumbers = range(0, min(max_page, num_pagenumbers))
+%            pagenumbers = range(0, min(max_page+1, num_pagenumbers))
 %        elif cur_page > max_page-num_pagenumbers//2:
 %            pagenumbers = range(max(0, max_page-num_pagenumbers+1), max_page+1)
 %        else:
