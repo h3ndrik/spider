@@ -9,7 +9,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
     # Patterns to parse tv_shows input filenames with ((c)tvnamer)
     'filename_patterns_tv_shows': [
         # [group] Show - 01-02 [crc]
-        '''^
+        '''^(.*\\/)*
         \[(?P<group>.+?)\][ ]?               # group name, captured for [#100]
         (?P<seriesname>.*?)[ ]?[-_][ ]?          # show name, padding, spaces?
         (?P<episodenumberstart>\d+)              # first episode number
@@ -22,7 +22,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\/]*$''',
 
         # [group] Show - 01 [crc]
-        '''^
+        '''^(.*\\/)*
         \[(?P<group>.+?)\][ ]?               # group name, captured for [#100]
         (?P<seriesname>.*)                       # show name
         [ ]?[-_][ ]?                             # padding and seperator
@@ -35,7 +35,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo s01e23 s01e24 s01e25 *
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         [Ss](?P<seasonnumber>[0-9]+)             # s01
         [\.\- ]?                                 # separator
@@ -52,7 +52,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo.s01e23e24*
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         [Ss](?P<seasonnumber>[0-9]+)             # s01
         [\.\- ]?                                 # separator
@@ -64,7 +64,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo.1x23 1x24 1x25
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         (?P<seasonnumber>[0-9]+)                 # first season number (1)
         [xX](?P<episodenumberstart>[0-9]+)       # first episode (x23)
@@ -78,7 +78,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo.1x23x24*
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         (?P<seasonnumber>[0-9]+)                 # 1
         [xX](?P<episodenumberstart>[0-9]+)       # first x23
@@ -88,7 +88,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo.s01e23-24*
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         [Ss](?P<seasonnumber>[0-9]+)             # s01
         [\.\- ]?                                 # separator
@@ -104,7 +104,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo.1x23-24*
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         (?P<seasonnumber>[0-9]+)                 # 1
         [xX](?P<episodenumberstart>[0-9]+)       # first x23
@@ -118,7 +118,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         $)''',
 
         # foo.[1x09-11]*
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+?)[ \._\-]          # show name and padding
         \[                                       # [
             ?(?P<seasonnumber>[0-9]+)            # season
@@ -131,7 +131,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\\/]*$''',
 
         # foo - [012]
-        '''^
+        '''^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?       # show name and padding
         \[                                       # [ not optional (or too ambigious)
         (?P<episodenumber>[0-9]+)                # episode
@@ -146,7 +146,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^0-9]*$''',
 
         # foo.1x09*
-        '''^
+        '''^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?       # show name and padding
         \[?                                      # [ optional
         (?P<seasonnumber>[0-9]+)                 # season
@@ -156,7 +156,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\\/]*$''',
 
         # foo.s01.e01, foo.s01_e01, "foo.s01 - e01"
-        '''^
+        '''^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?
         \[?
         [Ss](?P<seasonnumber>[0-9]+)[ ]?[\._\- ]?[ ]?
@@ -166,7 +166,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
         # foo.2010.01.02.etc
         '''
-        ^
+        ^(.*\\/)*
         ((?P<seriesname>.+?)[ \._\-])?          # show name
         (?P<year>\d{4})                          # year
         [ \._\-]                                 # separator
@@ -176,7 +176,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\/]*$''',
 
         # foo - [01.09]
-        '''^
+        '''^(.*\\/)*
         ((?P<seriesname>.+?))                # show name
         [ \._\-]?                                # padding
         \[                                       # [
@@ -188,14 +188,14 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\\/]*$''',
 
         # Foo - S2 E 02 - etc
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+?)[ ]?[ \._\-][ ]?
         [Ss](?P<seasonnumber>[0-9]+)[\.\- ]?
         [Ee]?[ ]?(?P<episodenumber>[0-9]+)
         [^\\/]*$''',
 
         # Show - Episode 9999 [S 12 - Ep 131] - etc
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+)                       # Showname
         [ ]-[ ]                                  # -
         [Ee]pisode[ ]\d+                         # Episode 1234 (ignored)
@@ -209,7 +209,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         ''',
 
         # show name 2 of 6 - blah
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+?)                  # Show name
         [ \._\-]                                 # Padding
         (?P<episodenumber>[0-9]+)                # 2
@@ -220,7 +220,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         ''',
 
         # Show.Name.Part.1.and.Part.2
-        '''^
+        '''^(.*\\/)*
         (?i)
         (?P<seriesname>.+?)                        # Show name
         [ \._\-]                                   # Padding
@@ -237,7 +237,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         ''',
 
         # Show.Name.Part1
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+?)                  # Show name\n
         [ \\._\\-]                               # Padding\n
         [Pp]art[ ](?P<episodenumber>[0-9]+)      # Part 1\n
@@ -245,28 +245,28 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         ''',
 
         # show name Season 01 Episode 20
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+?)[ ]?               # Show name
         [Ss]eason[ ]?(?P<seasonnumber>[0-9]+)[ ]? # Season 1
         [Ee]pisode[ ]?(?P<episodenumber>[0-9]+)   # Episode 20
         [^\\/]*$''',                              # Anything
 
         # foo.103*
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+)[ \._\-]
         (?P<seasonnumber>[0-9]{1})
         (?P<episodenumber>[0-9]{2})
         [\._ -][^\\/]*$''',
 
         # foo.0103*
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+)[ \._\-]
         (?P<seasonnumber>[0-9]{2})
         (?P<episodenumber>[0-9]{2,3})
         [\._ -][^\\/]*$''',
 
         # show.name.e123.abc
-        '''^
+        '''^(.*\\/)*
         (?P<seriesname>.+?)                  # Show name
         [ \._\-]                                 # Padding
         [Ee](?P<episodenumber>[0-9]+)            # E123

@@ -14,7 +14,7 @@ class Meta(object):
         self.audio_regexs = []
         self.image_regexs = []
 
-        for pattern in strings['filename_patterns_tv_shows'] + strings['path_patterns_tv_shows']:
+        for pattern in strings['path_patterns_tv_shows'] + strings['filename_patterns_tv_shows']:
             try:
                 regex = re.compile(pattern, re.VERBOSE)
             except (re.error, errormsg):
@@ -55,6 +55,7 @@ class Meta(object):
                     else:
                         logging.info('Database has no column for %r' % key)
                 self.db.add(item)
+                return  # Break on first match
         if not match:
             logging.info('No regex matched on %r' % filename)
 
