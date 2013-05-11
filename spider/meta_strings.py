@@ -4,7 +4,7 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
     'filetype_audio':[".nsv", ".m4a", ".flac", ".aac", ".strm", ".pls", ".rm", ".mpa", ".wav", ".wma", ".ogg", ".mp3", ".mp2", ".m3u", ".mod", ".amf", ".669", ".dmf", ".dsm", ".far", ".gdm", ".imf", ".it", ".m15", ".med", ".okt", ".s3m", ".stm", ".sfx", ".ult", ".uni", ".xm", ".sid", ".ac3", ".dts", ".cue", ".aif", ".aiff", ".wpl", ".ape", ".mac", ".mpc", ".mp+", ".mpp", ".shn", ".zip", ".rar", ".wv", ".nsf", ".spc", ".gym", ".adplug", ".adx", ".dsp", ".adp", ".ymf", ".ast", ".afc", ".hps", ".xsp"],
 
-    'filetype_picture':[".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif", ".tiff", ".tga", ".pcx", ".cbz", ".zip", ".cbr", ".rar", ".m3u"],
+    'filetype_image':[".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif", ".tiff", ".tga", ".pcx", ".cbz", ".zip", ".cbr", ".rar", ".m3u"],
 
     # Patterns to parse tv_shows input filenames with ((c)tvnamer)
     'filename_patterns_tv_shows': [
@@ -274,6 +274,25 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         ''',
     ],
     'path_patterns_tv_shows': [
+        # /path/TV_Shows/MythBusters/Season 01 [D, E]/MythBusters 01x05 A great eposide.avi
+        '''^.*                                   # path prefix
+        [\\/]                                    # new directory
+        ([tT][vV]([ \._\-][sS]how[s]?)?|([tT][vV][ \._\-])?[sS]erie[n]?) # TV_Shows
+        [\\/]                                    # new directory
+        (?P<seriesname>.+)                       # Showname
+        [\\/]                                    # new directory
+        (
+        ([sS]taffel|[sS]eries|[sS]eason)?[ \._\-]? # Season
+        (?P<seasonnumber>[0-9]+)                 # seasonnumber
+        [^\\/]*                                  # TODO language
+        [\\/]                                    # new directory
+        )?                                       # season directory is optional
+        [^\\/]*                                  # anything
+        [0-9]*                                   # season (ignored)
+        [^\\/]+                                  # something
+        (?P<episodenumber>\d+)                   # episode
+        [^\\/]*$                                 # rest of file
+        ''',
     ],
     'path_patterns_movies': [
     ],
