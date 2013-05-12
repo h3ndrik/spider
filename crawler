@@ -35,7 +35,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, interrupthandler)
     args = parse_args()
 
-    crawler = Crawler()
+    crawler = Crawler(args.database)
 
     #args.func(args)  # Broken, work around:
 #    print args

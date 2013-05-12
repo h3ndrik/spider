@@ -7,8 +7,8 @@ from spider.fs import FS
 class Crawler:
     """mislabeled main program"""
 
-    def __init__(self):
-        self.db = DB()
+    def __init__(self, database='sqlite:///spider.db'):
+        self.db = DB(database=database)
         pass
 
     def __del__(self):

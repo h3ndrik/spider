@@ -6,10 +6,18 @@ from sqlalchemy.ext import serializer
 import logging
 from spider.models import *
 from spider.helper import size2human, timestamp2human
+import os
+from configparser import SafeConfigParser
 
 app = Bottle()
 
-engine = create_engine('sqlite:///spider.db')
+database = 'sqlite:///spider.db'
+if os.path.isfile('spider.conf'):
+    config = SafeConfigParser()
+    config.read([args.conf_file])
+    defaults['database'] = config.get('Spider', 'database')
+
+engine = create_engine(database)
 Session = sessionmaker(bind=engine)
 session = Session()
 Base.metadata.create_all(engine)

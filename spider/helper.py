@@ -1,6 +1,8 @@
 import logging
 import hashlib
 import argparse
+import os
+from configparser import SafeConfigParser
 
 from time import time
 from datetime import timedelta
@@ -49,10 +51,36 @@ def parse_args():
     """
     Parse cmdline args
     """
-    parser = argparse.ArgumentParser(description='Crawl filesystem.')
+    conf_parser = argparse.ArgumentParser(add_help=False)
+    conf_parser.add_argument("-c", "--conf_file",
+                             help="Specify config file", metavar="FILE", default='spider.conf')
+    args, remaining_argv = conf_parser.parse_known_args()
+    defaults = {
+        'database' : 'sqlite:///spider.db',
+        'loglevel' : 'INFO',
+        'logfile' : '',
+        }
+
+    """Config file format:
+    [Spider]
+    database = sqlite:///spider.db
+    loglevel = INFO
+    logfile = 
+    """
+
+    if args.conf_file and os.path.isfile(args.conf_file):
+        config = SafeConfigParser()
+        config.read([args.conf_file])
+        #defaults['verbose'] = config.getint('Spider', 'verbose')
+        #defaults['database'] = config.get('Spider', 'database')
+        defaults.update(dict(config.items('Spider')))
+
+    parser = argparse.ArgumentParser(description='Crawl filesystem.',
+                                     parents=[conf_parser])
     parser.add_argument("-v", "--verbose", action="count", default=0,
                     help="increase output verbosity")
-    #parser.set_defaults(func=None)
+    parser.add_argument("--database", help="specify database path")
+    parser.set_defaults(**defaults)
 
     subparsers = parser.add_subparsers(dest='sub', help='')
 
@@ -96,23 +124,28 @@ def parse_args():
     parser_crawl = subparsers.add_parser('list', help='list configured directories')
     #parser_add.set_defaults(func=list)
 
-    args = parser.parse_args()
+    args = parser.parse_args(remaining_argv)
 
     logger = logging.getLogger()
 
-    if args.verbose >= 3:
+    if int(args.verbose) >= 3:
         logging.basicConfig(level=logging.DEBUG)  # Log everything, and send it to stderr.
         logger.setLevel(logging.DEBUG)
         logging.debug("Debug output enabled")
-    elif args.verbose >= 2:
+    elif int(args.verbose) >= 2:
         logging.basicConfig(level=logging.INFO)  # Log everything, and send it to stderr.
         logger.setLevel(logging.INFO)
-    elif args.verbose >= 1:
+    elif int(args.verbose) >= 1:
         logging.basicConfig(level=logging.WARNING)  # Log everything, and send it to stderr.
         logger.setLevel(logging.WARNING)
     else:
         logging.basicConfig(level=logging.ERROR)  # Log everything, and send it to stderr.
         logger.setLevel(logging.ERROR)
 
-#    print args.accumulate(args.integers)
+    if not args.logfile == '':
+        numeric_level = getattr(logging, args.loglevel.upper(), None)
+        if not isinstance(numeric_level, int):
+            raise ValueError('Invalid log level: %s' % loglevel)
+        logging.basicConfig(filename=args.logfile, level=numeric_level)
+
     return args
