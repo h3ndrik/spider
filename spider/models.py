@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean
 #from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
@@ -71,13 +71,14 @@ class Files(Base, DictSerializable):
     mime = Column(String)
     hash = Column(String(32))
     removed = Column(Integer(10))
-    meta = relationship("Metadata", uselist=False, backref="files")
+    #meta = relationship("Metadata", backref='file')
 
 class Metadata(Base, DictSerializable):
     """indirect and user-generated attributes of file"""
     __tablename__ = 'meta'
 
     id = Column(Integer, ForeignKey('files.id'))
+    file = relationship("Files", backref=backref('meta')) 
     metaid = Column(Integer, primary_key=True)
     filetype = Column(String)
     seriesname = Column(String)
@@ -110,7 +111,7 @@ class Metadata(Base, DictSerializable):
 
     tags = Column(String)
     comment = Column(String)
-    auto = Column(Integer)
+    auto = Column(Boolean)
     flag = Column(Integer)
 
     source = Column(String)    # who generated this metadata

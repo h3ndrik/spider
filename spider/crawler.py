@@ -61,14 +61,38 @@ class Crawler:
                 self.check(item.name)
                 self.db.lock(item)
                 fs = FS(self.db, item, hashalgorithm)
-                self.db.unlock(item)
                 fs.walk()
+                self.db.unlock(item)
             except CrawlerError:
                 pass
             except:
                 self.db.session.rollback()
                 item.errors += 1
                 self.db.session.commit()
+                self.db.unlock(item)
+                raise
+
+    def meta(self, args):
+        """update metadata"""
+        if hasattr(args, "name"):
+            items = self.db.getJobs(args.name)
+        else:
+            items = self.db.getJobs()
+        for item in items:
+            logging.info('Getting Metadata of: ' + item.name)
+            try:
+                self.check(item.name)
+                self.db.lock(item)
+                fs = FS(self.db, item)
+                fs.updatemeta()
+                self.db.unlock(item)
+            except CrawlerError:
+                pass
+            except:
+                self.db.session.rollback()
+                item.errors += 1
+                self.db.session.commit()
+                self.db.unlock(item)
                 raise
 
     def check(self, name):

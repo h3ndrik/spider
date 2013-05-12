@@ -102,27 +102,32 @@ def parse_args():
     #               help='directory to crawl')
     #parser_del.add_argument('mountpoint',
     #               help='only crawl if mountpoint is mounted')
-    #parser_add.set_defaults(func=delete)
+    #parser_del.set_defaults(func=delete)
 
     parser_disable = subparsers.add_parser('disable', help='temporarily remove directory from crawl')
     parser_disable.add_argument('name',
                    help='name')
-    #parser_add.set_defaults(func=disable)
+    #parser_disable.set_defaults(func=disable)
 
     parser_enable = subparsers.add_parser('enable', help='enable crawl of directory')
     parser_enable.add_argument('name',
                    help='name')
-    #parser_add.set_defaults(func=enable)
+    #parser_enable.set_defaults(func=enable)
 
     parser_crawl = subparsers.add_parser('crawl', help='start a single crawl')
     parser_crawl.add_argument('--name',
                    help='only crawl name')
     parser_crawl.add_argument("--hash",
                    help="specify hash algorithm or \'none\'")
-    #parser_add.set_defaults(func=crawl)
+    #parser_crawl.set_defaults(func=crawl)
 
-    parser_crawl = subparsers.add_parser('list', help='list configured directories')
-    #parser_add.set_defaults(func=list)
+    parser_meta = subparsers.add_parser('meta', help='only update metadata')
+    parser_meta.add_argument('--name',
+                   help='only update name')
+    #parser_meta.set_defaults(func=meta)
+
+    parser_list = subparsers.add_parser('list', help='list configured directories')
+    #parser_list.set_defaults(func=list)
 
     args = parser.parse_args(remaining_argv)
 

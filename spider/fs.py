@@ -4,7 +4,7 @@ from time import time
 import mimetypes
 mimetypes.init()
 from spider.db import DB
-from spider.models import Control, Files, TmpFiles
+from spider.models import Control, Files, TmpFiles, Metadata
 from spider.helper import md5sum, nonesum
 from spider.meta import Meta
 
@@ -32,7 +32,7 @@ class FS(object):
         logging.info('Reading Filesystem')
         self.read_fs()
         logging.info('Computing new files')
-################################# TODO Repair regex!!! ###########################
+################################# TODO Repair join!!! ###########################
         items = self.db.session.query(TmpFiles).outerjoin((Files, TmpFiles.filename == Files.filename)).\
                                                 filter(Files.filename == None).\
                                                 filter(Files.removed == None).all()
@@ -51,7 +51,7 @@ class FS(object):
         self.db.session.commit()
 
         logging.info('Computing deleted files')
-################################# TODO Repair regex!!! ###########################
+################################# TODO Repair join!!! ###########################
         items = self.db.session.query(Files).filter(Files.category == self.category).\
                                              outerjoin((TmpFiles, Files.filename == TmpFiles.filename)).\
                                                 filter(TmpFiles.filename == None).\
@@ -64,6 +64,20 @@ class FS(object):
 
         #logging.info('Deleting old database entries')
         # TODO and think of meta table
+
+    def updatemeta(self):
+        """update metadata"""
+        logging.info('Dumping current metadata table')
+        rows = self.db.session.query(Metadata).filter(Metadata.file.has(Files.category == self.category))
+        for row in rows:
+            self.db.session.delete(row)
+        #self.db.session.commit()
+        logging.info('Updating Metadata')
+        items = self.db.session.query(Files).filter(Files.category == self.category).all()
+        for item in items:
+            logging.debug('Updating Metadata of: ' + item.filename)
+            self.meta.insertmeta(item.filename, item.id)
+        self.db.session.commit()
 
     def read_fs(self):
         """walk filesystem and write to temporary table"""
