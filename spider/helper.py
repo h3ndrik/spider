@@ -64,6 +64,7 @@ def parse_args():
     """Config file format:
     [Spider]
     database = sqlite:///spider.db
+    # database = mysql://user:pass@localhost/database
     loglevel = INFO
     logfile = 
     """
@@ -163,5 +164,6 @@ def parse_args():
         if not isinstance(numeric_level, int):
             raise ValueError('Invalid log level: %s' % loglevel)
         logging.basicConfig(filename=args.logfile, level=numeric_level)
+        logger.addHandler(logging.FileHandler(args.logfile))
 
     return args
