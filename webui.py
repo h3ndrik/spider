@@ -15,7 +15,7 @@ database = 'sqlite:///spider.db'
 if os.path.isfile('spider.conf'):
     config = SafeConfigParser()
     config.read([args.conf_file])
-    defaults['database'] = config.get('Spider', 'database')
+    database = config.get('Spider', 'database')
 
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
