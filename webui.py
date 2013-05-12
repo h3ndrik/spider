@@ -3,10 +3,13 @@ from bottle import Bottle, run, template, static_file, TEMPLATE_PATH
 from bottle import route, request, response, abort
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext import serializer
+from sqlalchemy import or_
 import logging
 from spider.models import *
 from spider.helper import size2human, timestamp2human
 import os
+import re
+from time import sleep
 from configparser import SafeConfigParser
 
 app = Bottle()
@@ -75,6 +78,7 @@ def api_search(q=None, start=None, num=None):
     if q == '':
         return {'num_results':0, 'start':start, 'num':num, 'results': []}
     else:
+        q = re.sub(r' ', '%', q)
         result = session.query(Files).filter(Files.filename.like('%'+q+'%'))
     if result:
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
@@ -96,7 +100,7 @@ def api_new(start=None, num=None):
 
 @app.route('/file/<filename:path>')
 def file_static(filename):
-    return static_file(filename, root='/')
+    return static_file(filename, root='/') #################!!!!!!!!!!!!!!!!!!#################
 
 @app.route('/js/<filename:path>')
 def js_static(filename):

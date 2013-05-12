@@ -72,12 +72,26 @@ class Meta(object):
             regexs = []
         match = None
 
+        cover = None
+        try:
+            if os.path.isdir(filename):
+                path = filename
+            else:
+                path = os.path.dirname(filename)
+            ppath = os.path.dirname(path)
+            for look in [path, ppath]:
+                if os.path.isfile(os.path.join(look,'cover.jpg')):
+                    logging.info('Found cover.jpg')
+                    cover = path+'/cover.jpg'
+        except:
+            pass
+
         for regex in regexs:
             match = regex.match(filename)
             if match:
                 source = None # TODO
                 keys = match.groupdict().keys()
-                item = Metadata(id=id, filetype=filetype, source=source, auto=True)
+                item = Metadata(id=id, filetype=filetype, source=source, cover=cover, auto=True)
                 for key in keys:
                     if hasattr(item, key):
                         setattr(item, key, match.group(key))

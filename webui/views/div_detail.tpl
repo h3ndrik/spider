@@ -13,9 +13,9 @@
           <tbody id="filedetail">
             <tr>
               <td>
-%# Display 'cover.jpg' if exists
+%# TODO: Display 'cover.jpg' if exists
 %    if detail['mime'].startswith('video'):
-                <video width="640" height="390" controls>
+                <video width="640" height="390" poster="" controls>
                   <source src="/file/{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
@@ -32,8 +32,13 @@
 </OBJECT>
                  ende test -->
 
+%    elif detail['mime'].startswith('audio'):
+                <audio controls>
+                  <source src="/file/{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                  This browser is not compatible with HTML5
+                </audio>
 %    elif detail['mime'].startswith('image'):
-                <img src="{{filedetail['detail']['filename']}}" width="300" height="200"/>
+                <img src="{{filedetail['detail']['filename']}}" width="640" height="390"/>
 %    end
               </td>
               <td>
@@ -60,6 +65,7 @@
                   <li>Quality: {{meta['quality']}}</li>
                   <li>Group: {{meta['group']}}</li>
 
+                  <li>Cover: <img src="{{'/file'+meta['cover'] if meta['cover'] else ''}}" width="64" height="39" /></li>
                   <li>Tags: {{meta['tags']}}</li>
                   <li>Genre: {{meta['genre']}}</li>
                   <li>Comment: {{meta['comment']}}</li>

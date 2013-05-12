@@ -109,6 +109,7 @@ class Metadata(Base, DictSerializable):
 
     author = Column(String)
 
+    cover = Column(String)
     tags = Column(String)
     comment = Column(String)
     auto = Column(Boolean)
