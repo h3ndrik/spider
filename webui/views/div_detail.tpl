@@ -40,18 +40,19 @@
 %    from spider.helper import size2human, timestamp2human
 %    for meta in filedetail['meta']:
                 <ul>
-%        if meta['filetype'] == 'tv_show':
+%        if meta['filetype'] == 'video':
+                  <li>Moviename: {{meta['moviename']}}</li>
                   <li>Series: {{meta['seriesname']}}</li>
                   <li>Season: {{meta['seasonnumber']}}</li>
                   <li>Episode: {{meta['episodenumber']}}</li>
-%        end
-%        if meta['filetype'] == 'album':
+%        elif meta['filetype'] == 'audio':
                   <li>Artist: {{meta['artist']}}</li>
                   <li>{{meta['year']}} - {{meta['album']}}</li>
                   <li>{{meta['track']}} - {{meta['title']}}</li>
-                  <li>Genre: {{meta['genre']}}</li>
-                  <li>Collection: {{meta['collection']}}</li>
+%        elif meta['filetype'] == 'text':
+                  <li>Author: {{meta['author']}}</li>
 %        end
+                  <li>Collection: {{meta['collection']}}</li>
                   <li>Duration: {{meta['duration']}}</li>
                   <li>Language: {{meta['language']}}</li>
                   <li>Resolution: {{meta['resolution']}}</li>
@@ -60,6 +61,7 @@
                   <li>Group: {{meta['group']}}</li>
 
                   <li>Tags: {{meta['tags']}}</li>
+                  <li>Genre: {{meta['genre']}}</li>
                   <li>Comment: {{meta['comment']}}</li>
                   <li>Auto: {{meta['auto']}}</li>
                   <li>Flag: {{meta['flag']}}</li>

@@ -68,7 +68,8 @@ class FS(object):
     def updatemeta(self):
         """update metadata"""
         logging.info('Dumping current metadata table')
-        rows = self.db.session.query(Metadata).filter(Metadata.file.has(Files.category == self.category))
+        rows = self.db.session.query(Metadata).filter(Metadata.file.has(Files.category == self.category)).\
+                                               filter(Metadata.auto == True).all()
         for row in rows:
             self.db.session.delete(row)
         #self.db.session.commit()

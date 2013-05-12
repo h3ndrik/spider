@@ -77,7 +77,7 @@ class Meta(object):
             if match:
                 source = None # TODO
                 keys = match.groupdict().keys()
-                item = Metadata(id=id, source=source, auto=True)
+                item = Metadata(id=id, filetype=filetype, source=source, auto=True)
                 for key in keys:
                     if hasattr(item, key):
                         setattr(item, key, match.group(key))
