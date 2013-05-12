@@ -68,7 +68,18 @@ def parse_args():
     logfile = 
     """
 
+    # read global config
+    search_path = ['/etc', '']
+    for path in search_path:
+        candidate = os.path.join(path, 'spider.conf')
+        if os.path.isfile(candidate):
+            logging.info('Reading global conffile ' + candidate)
+            config = SafeConfigParser()
+            config.read([candidate])
+            defaults.update(dict(config.items('Spider')))
+
     if args.conf_file and os.path.isfile(args.conf_file):
+        logging.info('Reading conffile(2) ' + args.conf_file)
         config = SafeConfigParser()
         config.read([args.conf_file])
         #defaults['verbose'] = config.getint('Spider', 'verbose')

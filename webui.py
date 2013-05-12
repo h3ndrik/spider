@@ -12,10 +12,13 @@ from configparser import SafeConfigParser
 app = Bottle()
 
 database = 'sqlite:///spider.db'
-if os.path.isfile('spider.conf'):
-    config = SafeConfigParser()
-    config.read([args.conf_file])
-    database = config.get('Spider', 'database')
+search_path = ['/etc', '']
+for path in search_path:
+    candidate = os.path.join(path, 'spider.conf')
+    if os.path.isfile(candidate):
+        config = SafeConfigParser()
+        config.read([candidate])
+        database = config.get('Spider', 'database')
 
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
