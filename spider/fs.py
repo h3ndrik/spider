@@ -42,7 +42,7 @@ class FS(object):
             #logging.debug('Analyzing: ' + item.filename)
             try:
                 self.insertfile(item.filename)
-            except FileNotFoundError:
+            except (OSError, FileNotFoundError):
                 #TODO: insert with flag set
                 logging.warning('Could not insert file. Probably bad encoding?')
                 self.control.errors += 1
@@ -96,7 +96,7 @@ class FS(object):
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                     self.db.add(item)
-                except FileNotFoundError:
+                except (OSError, FileNotFoundError):
                     logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
             for file in files:
                 try:
@@ -104,7 +104,7 @@ class FS(object):
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                     self.db.add(item)
-                except FileNotFoundError:
+                except (OSError, FileNotFoundError):
                     logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
 
             #if '.git' in subdirs:
