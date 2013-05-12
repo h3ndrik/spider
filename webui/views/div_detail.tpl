@@ -13,6 +13,7 @@
           <tbody id="filedetail">
             <tr>
               <td>
+%# Display 'cover.jpg' if exists
 %    if detail['mime'].startswith('video'):
                 <video width="640" height="390" controls>
                   <source src="/file/{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />

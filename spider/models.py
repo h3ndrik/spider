@@ -96,6 +96,8 @@ class Metadata(Base, DictSerializable):
     quality = Column(String)
     group = Column(String)
 
+    moviename = Column(String)
+
     title = Column(String)
     artist = Column(String)
     album = Column(String)
@@ -103,6 +105,8 @@ class Metadata(Base, DictSerializable):
     track = Column(Integer)
     genre = Column(String)
     collection = Column(String)
+
+    author = Column(String)
 
     tags = Column(String)
     comment = Column(String)

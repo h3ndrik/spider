@@ -1,7 +1,7 @@
 import os
 import re
 import logging
-from spider.meta_strings import strings
+from spider.meta_patterns import strings
 from spider.models import Metadata
 
 class Meta(object):
@@ -13,8 +13,9 @@ class Meta(object):
         self.video_regexs = []
         self.audio_regexs = []
         self.image_regexs = []
+        self.text_regexs = []
 
-        for pattern in strings['path_patterns_tv_shows'] + strings['filename_patterns_tv_shows']:
+        for pattern in strings['path_patterns_tv_shows'] + strings['path_patterns_movies'] + strings['filename_patterns_tv_shows']:
             try:
                 regex = re.compile(pattern, re.VERBOSE)
             except (re.error, errormsg):
@@ -22,6 +23,33 @@ class Meta(object):
                     errormsg, pattern))
             else:
                 self.video_regexs.append(regex)
+
+        for pattern in strings['path_patterns_albums'] + strings['path_patterns_audiobooks']:
+            try:
+                regex = re.compile(pattern, re.VERBOSE)
+            except (re.error, errormsg):
+                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
+                    errormsg, pattern))
+            else:
+                self.audio_regexs.append(regex)
+
+        for pattern in strings['path_patterns_images']:
+            try:
+                regex = re.compile(pattern, re.VERBOSE)
+            except (re.error, errormsg):
+                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
+                    errormsg, pattern))
+            else:
+                self.image_regexs.append(regex)
+
+        for pattern in strings['path_patterns_ebooks']:
+            try:
+                regex = re.compile(pattern, re.VERBOSE)
+            except (re.error, errormsg):
+                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
+                    errormsg, pattern))
+            else:
+                self.text_regexs.append(regex)
 
     def insertmeta(self, filename, id):
         """gather metadata for 'filename' and write to metadata table"""
@@ -31,13 +59,14 @@ class Meta(object):
         elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_audio']:
             filetype = 'audio'
             regexs = self.audio_regexs
-            #TODO
         elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_image']:
             filetype = 'image'
             regexs = self.image_regexs
-            #TODO
-        # E-Book
+        elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_text']:
+            filetype = 'text'
+            regexs = self.text_regexs
         # Software
+        # Games
         else:
             filetype = 'other'
             regexs = []

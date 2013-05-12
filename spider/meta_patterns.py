@@ -6,6 +6,8 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
 
     'filetype_image':[".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif", ".tiff", ".tga", ".pcx", ".cbz", ".zip", ".cbr", ".rar", ".m3u"],
 
+    'filetype_text':[".txt", ".pdf", ".lit", ".doc", ".html", ".htm", ".epub", ".zip", ".rar", ".tar", ".gz", ".bz2", ".7z"],
+
     # Patterns to parse tv_shows input filenames with ((c)tvnamer)
     'filename_patterns_tv_shows': [
         # [group] Show - 01-02 [crc]
@@ -273,34 +275,112 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [\._ -][^\\/]*$                          # More padding, then anything
         ''',
     ],
+
+    # Own patterns (c) h3ndrik (wtftpl)
     'path_patterns_tv_shows': [
-        # /path/TV_Shows/MythBusters/Season 01 [D, E]/MythBusters 01x05 A great eposide.avi
-        '''^.*                                   # path prefix
-        [\\/]                                    # new directory
-        ([tT][vV]([ \._\-][sS]how[s]?)?|([tT][vV][ \._\-])?[sS]erie[n]?) # TV_Shows
-        [\\/]                                    # new directory
-        (?P<seriesname>.+)                       # Showname
-        [\\/]                                    # new directory
+        # /path/TV Shows/MythBusters/Season 01 [D, E]/MythBusters 01x05 A great eposide.avi
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([tT][vV]([ \._\-][sS]how[s]?)?|([tT][vV][ \._\-])?[sS]erie[n]?) # TV Shows directory
+        [\/]                                    # new directory
+        (?P<seriesname>[^\/]+)                  # Showname
+        [\/]                                    # new directory
         (
         ([sS]taffel|[sS]eries|[sS]eason)?[ \._\-]? # Season
-        (?P<seasonnumber>[0-9]+)                 # seasonnumber
-        [^\\/]*                                  # TODO language
-        [\\/]                                    # new directory
-        )?                                       # season directory is optional
-        [^\\/]*                                  # anything
-        [0-9]*                                   # season (ignored)
-        [^\\/]+                                  # something
-        (?P<episodenumber>\d+)                   # episode
-        [^\\/]*$                                 # rest of file
+        (?P<seasonnumber>[0-9]+)                # seasonnumber
+        ([ ,\._\-]+\[?(?P<language>[^\/]+?)\]?)?  # language, optional
+        [\/]                                    # new directory
+        )?                                      # season directory is optional
+        [^\/]*?                                 # anything (non-greedy) (probably seasonname(again))
+        (
+        [0-9]*                                  # season (again,ignored), to not ignore: (?P=seasonnumber)+
+        [^\/0-9]+                               # something
+        )?                                      # season(again) is optional
+        (?P<episodenumber>\d+)                  # episode
+        [ \._\-][^\/]*$                         # padding, then anything
         ''',
+
     ],
     'path_patterns_movies': [
+        # /path/Movies/Star Trek IV/HD, [D, E]/Star Trek IV - Best movie ever.avi
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([mM]ovie[s]?|[fF]ilm[e]?)              # Movies directory
+        [\/]                                    # new directory
+        (?P<moviename>[^\/]+)                   # Moviename
+        [\/]                                    # new directory
+        (
+        (?P<quality>[^\/]+?)                    # quality
+        ([ \,\._\-]+\[?(?P<language>[^\/]+?)\]?)?  # language, optional
+        [\/]                                    # new directory
+        )?                                      # quality is optional
+        [^\/]*$                                 # filename (ignored)
+        ''',
+
+        # /path/Movies/Star Trek IV.avi
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([mM]ovie[s]?|[fF]ilm[e]?)              # Movies directory
+        [\/]                                    # new directory
+        (?P<moviename>[^\/]+)                   # Moviename
+        \.                                      # dot
+        [^\/]*$                                 # fileextension
+        ''',
     ],
     'path_patterns_albums': [
+        # /path/Alben/Artist/Album/01 - Title.mp3
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([aA]lben)                              # Alben directory
+        [\/]                                    # new directory
+        (?P<artist>[^\/]+)                      # Artist
+        [\/]                                    # new directory
+        (?P<album>[^\/]+)                       # Album
+        [\/]                                    # new directory
+        (?P<track>\d+)                          # track
+        [ \._\-]*                               # whitespace
+        (?P<title>[^\/]+)                       # Title
+        \.                                      # dot
+        [^\/]*$                                 # fileextension
+        ''',
     ],
     'path_patterns_audiobooks': [
+        # /path/Audiobooks/Artist/Collection/Album/01 - Track.mp3
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([aA]udiobook[s]?)                      # Audiobooks directory
+        [\/]                                    # new directory
+        (
+        (?P<artist>[^\/]+)                      # Artist
+        [\/]                                    # new directory
+        )??                                     # Artist is optional (non-greedy)
+        (?P<collection>[^\/]+)                  # Collection
+        [\/]                                    # new directory
+        (
+        (?P<album>[^\/]+)                       # Album
+        [\/]                                    # new directory
+        )?                                      # Album is optional
+        (?P<track>\d+)?                         # track (optional)
+        [ \._\-]*                               # whitespace
+        (?P<title>[^\/]+)                       # Title
+        \.                                      # dot
+        [^\/]*$                                 # fileextension
+        ''',
     ],
     'path_patterns_ebooks': [
+        # /path/E-Books/Browne, Dik/Hägar der Schreckliche/Eheglück.pdf
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([eE][ \._\-]?[bB]ook[s]?)              # E-Books directory
+        [\/]                                    # new directory
+        (?P<author>[^\/]+)                      # Author
+        [\/]                                    # new directory
+        (?P<collection>[^\/]+)                  # Collection
+        [\/]                                    # new directory
+        (?P<title>[^\/]+)                       # Title
+        \.                                      # dot
+        [^\/]*$                                 # fileextension
+        ''',
     ],
     'path_patterns_games': [
     ],
