@@ -43,7 +43,7 @@ class FS(object):
             #logging.debug('Analyzing: ' + item.filename)
             try:
                 self.insertfile(item.filename)
-            except getattr(__builtins__,'FileNotFoundError', IOError):
+            except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                 #TODO: insert with flag set
                 logging.warning('Could not insert file. Probably bad encoding?')
                 self.control.errors += 1
@@ -97,7 +97,7 @@ class FS(object):
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                     self.db.add(item)
-                except getattr(__builtins__,'FileNotFoundError', IOError):
+                except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                     logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
             for file in files:
                 try:
@@ -105,7 +105,7 @@ class FS(object):
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
                     self.db.add(item)
-                except getattr(__builtins__,'FileNotFoundError', IOError):
+                except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                     logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
 
             #if '.git' in subdirs:
@@ -121,7 +121,7 @@ class FS(object):
             (mime, encoding) = mimetypes.guess_type(filename)
             hash = self.hashsum(filename)
             removed = None
-        elif os.path.isdir:
+        elif os.path.isdir(filename):
             logging.debug(''.join(["Updating(New,Dir): ", filename]))
             mime = "directory"
             hash = None
