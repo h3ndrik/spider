@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
-strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm", ".rmvb", ".m3u", ".ifo", ".mov", ".qt", ".divx", ".xvid", ".bivx", ".vob", ".nrg", ".img", ".iso", ".pva", ".wmv", ".asf", ".asx", ".ogm", ".m2v", ".avi", ".bin", ".dat", ".dvr-ms", ".mpg", ".mpeg", ".mp4", ".mkv", ".avc", ".vp3", ".svq3", ".nuv", ".viv", ".dv", ".fli", ".flv", ".rar", ".001", ".wpl", ".zip"],
+filetypes = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm", ".rmvb", ".m3u", ".ifo", ".mov", ".qt", ".divx", ".xvid", ".bivx", ".vob", ".nrg", ".img", ".iso", ".pva", ".wmv", ".asf", ".asx", ".ogm", ".m2v", ".avi", ".bin", ".dat", ".dvr-ms", ".mpg", ".mpeg", ".mp4", ".mkv", ".avc", ".vp3", ".svq3", ".nuv", ".viv", ".dv", ".fli", ".flv", ".rar", ".001", ".wpl", ".zip"],
 
     'filetype_audio':[".nsv", ".m4a", ".flac", ".aac", ".strm", ".pls", ".rm", ".mpa", ".wav", ".wma", ".ogg", ".mp3", ".mp2", ".m3u", ".mod", ".amf", ".669", ".dmf", ".dsm", ".far", ".gdm", ".imf", ".it", ".m15", ".med", ".okt", ".s3m", ".stm", ".sfx", ".ult", ".uni", ".xm", ".sid", ".ac3", ".dts", ".cue", ".aif", ".aiff", ".wpl", ".ape", ".mac", ".mpc", ".mp+", ".mpp", ".shn", ".zip", ".rar", ".wv", ".nsf", ".spc", ".gym", ".adplug", ".adx", ".dsp", ".adp", ".ymf", ".ast", ".afc", ".hps", ".xsp"],
 
     'filetype_image':[".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif", ".tiff", ".tga", ".pcx", ".cbz", ".zip", ".cbr", ".rar", ".m3u"],
 
     'filetype_text':[".txt", ".pdf", ".lit", ".doc", ".html", ".htm", ".epub", ".zip", ".rar", ".tar", ".gz", ".bz2", ".7z"],
+}
 
+pattern_strings = {
+    'video': {
+    'tv_show': {
     # Patterns to parse tv_shows input filenames with ((c)tvnamer)
     'filename_patterns_tv_shows': [
         # [group] Show - 01-02 [crc]
@@ -299,8 +303,9 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         (?P<episodenumber>\d+)                  # episode
         [ \._\-][^\/]*$                         # padding, then anything
         ''',
-
     ],
+    },
+    'movie': {
     'path_patterns_movies': [
         # /path/Movies/Star Trek IV/HD, [D, E]/Star Trek IV - Best movie ever.avi
         '''^.*                                  # path prefix
@@ -327,6 +332,10 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\/]*$                                 # fileextension
         ''',
     ],
+    },
+    },
+    'audio': {
+    'album': {
     'path_patterns_albums': [
         # /path/Alben/Artist/Album/01 - Title.mp3
         '''^.*                                  # path prefix
@@ -344,6 +353,8 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\/]*$                                 # fileextension
         ''',
     ],
+    },
+    'audiobook': {
     'path_patterns_audiobooks': [
         # /path/Audiobooks/Artist/Collection/Album/01 - Track.mp3
         '''^.*                                  # path prefix
@@ -367,6 +378,10 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\/]*$                                 # fileextension
         ''',
     ],
+    },
+    },
+    'text': {
+    'ebook': {
     'path_patterns_ebooks': [
         # /path/E-Books/Browne, Dik/Hägar der Schreckliche/Eheglück.pdf
         '''^.*                                  # path prefix
@@ -382,10 +397,22 @@ strings = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".rm
         [^\/]*$                                 # fileextension
         ''',
     ],
+    },
+    },
+    'executable': {
+    'game': {
     'path_patterns_games': [
     ],
+    },
+    'software': {
     'path_patterns_software': [
     ],
+    },
+    },
+    'image': {
+    'image': {
     'path_patterns_images': [
     ],
+    },
+    },
 }

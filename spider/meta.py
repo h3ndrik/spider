@@ -1,7 +1,7 @@
 import os
 import re
 import logging
-from spider.meta_patterns import strings
+from spider.meta_patterns import filetypes, pattern_strings
 from spider.models import Metadata
 
 class Meta(object):
@@ -10,68 +10,41 @@ class Meta(object):
     def __init__(self, db, name):
         self.db = db
         self.category = name
-        self.video_regexs = []
-        self.audio_regexs = []
-        self.image_regexs = []
-        self.text_regexs = []
 
-        for pattern in strings['path_patterns_tv_shows'] + strings['path_patterns_movies'] + strings['filename_patterns_tv_shows']:
-            try:
-                regex = re.compile(pattern, re.VERBOSE)
-            except (re.error, errormsg):
-                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
-                    errormsg, pattern))
-            else:
-                self.video_regexs.append(regex)
-
-        for pattern in strings['path_patterns_albums'] + strings['path_patterns_audiobooks']:
-            try:
-                regex = re.compile(pattern, re.VERBOSE)
-            except (re.error, errormsg):
-                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
-                    errormsg, pattern))
-            else:
-                self.audio_regexs.append(regex)
-
-        for pattern in strings['path_patterns_images']:
-            try:
-                regex = re.compile(pattern, re.VERBOSE)
-            except (re.error, errormsg):
-                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
-                    errormsg, pattern))
-            else:
-                self.image_regexs.append(regex)
-
-        for pattern in strings['path_patterns_ebooks']:
-            try:
-                regex = re.compile(pattern, re.VERBOSE)
-            except (re.error, errormsg):
-                logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
-                    errormsg, pattern))
-            else:
-                self.text_regexs.append(regex)
+        # Compile regexs
+        self.regexs = dict()
+        for filetype in pattern_strings:
+            self.regexs[filetype] = dict()
+            for category in pattern_strings[filetype]:
+                self.regexs[filetype][category] = dict()
+                for patternname in pattern_strings[filetype][category]:
+                    self.regexs[filetype][category][patternname] = []
+                    for pattern in pattern_strings[filetype][category][patternname]:
+                        try:
+                            regex = re.compile(pattern, re.VERBOSE)
+                        except (re.error, errormsg):
+                            logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
+                                errormsg, pattern))
+                        else:
+                            self.regexs[filetype][category][patternname].append(regex)
+        self.regexs['other'] = dict()
 
     def insertmeta(self, filename, id):
         """gather metadata for 'filename' and write to metadata table"""
-        if os.path.splitext(filename)[1].strip().lower() in strings['filetype_video']:
+        if os.path.splitext(filename)[1].strip().lower() in filetypes['filetype_video']:
             filetype = 'video'
-            regexs = self.video_regexs
-        elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_audio']:
+        elif os.path.splitext(filename)[1].strip().lower() in filetypes['filetype_audio']:
             filetype = 'audio'
-            regexs = self.audio_regexs
-        elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_image']:
+        elif os.path.splitext(filename)[1].strip().lower() in filetypes['filetype_image']:
             filetype = 'image'
-            regexs = self.image_regexs
-        elif os.path.splitext(filename)[1].strip().lower() in strings['filetype_text']:
+        elif os.path.splitext(filename)[1].strip().lower() in filetypes['filetype_text']:
             filetype = 'text'
-            regexs = self.text_regexs
         # Software
         # Games
         else:
             filetype = 'other'
-            regexs = []
-        match = None
 
+        # get cover.jpg TODO
         cover = None
         try:
             if os.path.isdir(filename):
@@ -86,19 +59,21 @@ class Meta(object):
         except:
             pass
 
-        for regex in regexs:
-            match = regex.match(filename)
-            if match:
-                source = None # TODO
-                keys = match.groupdict().keys()
-                item = Metadata(id=id, filetype=filetype, source=source, cover=cover, auto=True)
-                for key in keys:
-                    if hasattr(item, key):
-                        setattr(item, key, match.group(key))
-                    else:
-                        logging.info('Database has no column for %r' % key)
-                self.db.add(item)
-                return  # Break on first match
-        if not match:
-            logging.info('No regex matched on %r' % filename)
+        match = None
+        for category in self.regexs[filetype]:
+            for patternname in self.regexs[filetype][category]:
+                for regex in self.regexs[filetype][category][patternname]:
+                    match = regex.match(filename)
+                    if match:
+                        keys = match.groupdict().keys()
+                        item = Metadata(id=id, filetype=category, source=patternname, cover=cover, auto=True)
+                        for key in keys:
+                            if hasattr(item, key):
+                                setattr(item, key, match.group(key))
+                            else:
+                                logging.info('Database has no column for %r' % key)
+                        self.db.add(item)
+                        return  # Break on first match
+                if not match:
+                    logging.info('No regex matched on %r' % filename)
 

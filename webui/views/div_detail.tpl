@@ -45,16 +45,17 @@
 %    from spider.helper import size2human, timestamp2human
 %    for meta in filedetail['meta']:
                 <ul>
-%        if meta['filetype'] == 'video':
-                  <li>Moviename: {{meta['moviename']}}</li>
+%        if meta['filetype'] == 'tv_show':
                   <li>Series: {{meta['seriesname']}}</li>
                   <li>Season: {{meta['seasonnumber']}}</li>
                   <li>Episode: {{meta['episodenumber']}}</li>
-%        elif meta['filetype'] == 'audio':
+%        elif meta['filetype'] == 'movie':
+                  <li>Moviename: {{meta['moviename']}}</li>
+%        elif meta['filetype'] == 'album':
                   <li>Artist: {{meta['artist']}}</li>
                   <li>{{meta['year']}} - {{meta['album']}}</li>
                   <li>{{meta['track']}} - {{meta['title']}}</li>
-%        elif meta['filetype'] == 'text':
+%        elif meta['filetype'] == 'ebook':
                   <li>Author: {{meta['author']}}</li>
 %        end
                   <li>Collection: {{meta['collection']}}</li>
