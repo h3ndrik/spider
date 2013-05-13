@@ -129,7 +129,8 @@ class FS(object):
         else:
             logging.debug(''.join(["Updating(Removed): ", filename]))
             removed = time()
-            pass # TODO!
+            pass # TODO! (Currently this triggers an exception on os.stat())
+                 # TODO  (And is reached by files with bad encoding)
 
         filestat = os.stat(filename)
         mtime = filestat.st_mtime
@@ -137,7 +138,6 @@ class FS(object):
         size = filestat.st_size
         category = self.category
 
-        removed = None
         item = Files(filename=filename, category=category, mtime=mtime, firstseen=firstseen, size=size, mime=mime, hash=hash, removed=removed)
         self.db.add(item)
         self.db.session.flush()
