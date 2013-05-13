@@ -15,6 +15,10 @@ from configparser import SafeConfigParser
 app = Bottle()
 
 database = 'sqlite:///spider.db'
+title = 'Spider Search'
+host = '0.0.0.0'  # 'localhost'
+port = 8080
+debug = False
 search_path = ['/etc', '']
 for path in search_path:
     candidate = os.path.join(path, 'spider.conf')
@@ -22,6 +26,10 @@ for path in search_path:
         config = SafeConfigParser()
         config.read([candidate])
         database = config.get('Spider', 'database')
+        title = config.get('WebUI', 'title')
+        host = config.get('WebUI', 'host')
+        port = config.getint('WebUI', 'port')
+        debug = config.getboolean('WebUI', 'debug')
 
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
@@ -30,7 +38,7 @@ Base.metadata.create_all(engine)
 
 @app.route('/')
 def index():
-    return template('index', title='Spider Search')
+    return template('index', title=title)
 
 @app.route('/favicon.ico')
 def favicon():
@@ -44,7 +52,7 @@ def suche():
     q = request.query.q
     start = int(request.query.start or 0)
     num = int(request.query.num or 20)
-    return template('index', title='Spider Search', results=api_search(start=start, num=num, q=q), q=q)
+    return template('index', title=title, results=api_search(start=start, num=num, q=q), q=q)
 
 @app.route('/new/')
 @app.route('/neues/')
@@ -53,11 +61,11 @@ def suche():
 def neues():
     start = int(request.query.start or 0)
     num = int(request.query.num or 20)
-    return template('index', title='Spider Search', results=api_new(start=start, num=num))
+    return template('index', title=title, results=api_new(start=start, num=num))
 
 @app.route('/detail/<id:int>')
 def detail(id=None):
-    return template('index', title='Spider Search', filedetail=api_detail(id))
+    return template('index', title=title, filedetail=api_detail(id))
 
 @app.route('/api/detail/<id:int>')
 def api_detail(id=None):
@@ -115,4 +123,4 @@ def img_static(filename):
     return static_file(filename, root='./webui/css')
 
 TEMPLATE_PATH.insert(0,'webui/views/')
-run(app, host='localhost', port=8080, debug=True, reloader=True)
+run(app, host=host, port=port, debug=debug, reloader=debug)

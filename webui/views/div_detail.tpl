@@ -38,7 +38,7 @@
                   This browser is not compatible with HTML5
                 </audio>
 %    elif detail['mime'].startswith('image'):
-                <img src="{{filedetail['detail']['filename']}}" width="640" height="390"/>
+                <img src="{{'/file'+filedetail['detail']['filename']}}" width="640" height="390"/>
 %    end
               </td>
               <td>

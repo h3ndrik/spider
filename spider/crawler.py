@@ -57,10 +57,14 @@ class Crawler:
                     logging.warning('Selected hash-algorithm does not match configured one')
             else:
                 hashalgorithm = item.hashalgorithm
+            if hasattr(args, 'nometa') and args.nometa == True:
+                metacrawl = False
+            else:
+                metacrawl = True
             try:
                 self.check(item.name)
                 self.db.lock(item)
-                fs = FS(self.db, item, hashalgorithm)
+                fs = FS(self.db, item, hashalgorithm, metacrawl)
                 fs.walk()
                 self.db.unlock(item)
             except CrawlerError:

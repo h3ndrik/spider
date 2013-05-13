@@ -11,12 +11,13 @@ from spider.meta import Meta
 class FS(object):
     """All Filesystem interaction"""
 
-    def __init__(self, db, control, hashalgorithm='md5'):
+    def __init__(self, db, control, hashalgorithm='md5', metacrawl=True):
         self.db = db
         self.control = control
         self.directory = control.directory
         self.category = control.name
         self.meta = Meta(self.db, control.name)
+        self.metacrawl = metacrawl
         self.timeout = 2592000
         if hashalgorithm == 'md5' or hashalgorithm == 'md5sum':
             self.hashsum = md5sum
@@ -140,7 +141,8 @@ class FS(object):
         item = Files(filename=filename, category=category, mtime=mtime, firstseen=firstseen, size=size, mime=mime, hash=hash, removed=removed)
         self.db.add(item)
         self.db.session.flush()
-        self.meta.insertmeta(filename, item.id)
+        if self.metacrawl:
+            self.meta.insertmeta(filename, item.id)
 
     def removefile(self, filename):
         """mark 'filename' as removed"""

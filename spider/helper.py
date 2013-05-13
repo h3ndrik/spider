@@ -131,6 +131,8 @@ def parse_args():
                    help='only crawl name')
     parser_crawl.add_argument("--hash",
                    help="specify hash algorithm or \'none\'")
+    parser_crawl.add_argument("--nometa", action='store_true',
+                   help="do not get meta information")
     #parser_crawl.set_defaults(func=crawl)
 
     parser_meta = subparsers.add_parser('meta', help='only update metadata')
