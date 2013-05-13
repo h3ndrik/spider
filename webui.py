@@ -23,13 +23,24 @@ search_path = ['/etc', '']
 for path in search_path:
     candidate = os.path.join(path, 'spider.conf')
     if os.path.isfile(candidate):
-        config = SafeConfigParser()
-        config.read([candidate])
-        database = config.get('Spider', 'database')
-        title = config.get('WebUI', 'title')
-        host = config.get('WebUI', 'host')
-        port = config.getint('WebUI', 'port')
-        debug = config.getboolean('WebUI', 'debug')
+        try:
+            config = SafeConfigParser()
+            config.read([candidate])
+            database = config.get('Spider', 'database')
+            title = config.get('WebUI', 'title')
+            host = config.get('WebUI', 'host')
+            port = config.getint('WebUI', 'port')
+            debug = config.getboolean('WebUI', 'debug')
+            #datapathsub = list(filter(None, [x.strip() for x in datapath_regexps.splitlines()]))
+        except:
+            pass
+        datapath_sub = dict()
+        try:
+            datapath_sub = config.items('datapath_substitutions')
+            #for path, replace in datapath_sub:
+            #    print (key)
+        except:
+            pass
 
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)

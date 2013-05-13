@@ -66,7 +66,16 @@ def parse_args():
     database = sqlite:///spider.db
     # database = mysql://user:pass@localhost/database
     loglevel = INFO
-    logfile = 
+    logfile = spider.log
+    [WebUI]
+    title = Spider Search
+    host = 0.0.0.0
+    # host = localhost
+    port = 8080
+    debug = False
+    [datapath_substitutions]
+    /media/videos = ftp://192.168.1.2/pub/videos
+    /media/audio = /file/audio
     """
 
     # read global config
