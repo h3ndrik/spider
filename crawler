@@ -27,6 +27,9 @@ if __name__ == "__main__":
 
     # Startup
     logging.info("=== Spider v." + __version__ + " ===")
+    if sys.version_info <= (3, 0):
+        logging.error('This program will not work with python2')
+        sys.exit(1)
     if os.geteuid() == 0:
         logging.warning("Warning, running as root")
     os.nice(19)
