@@ -85,28 +85,32 @@ class FS(object):
         """walk filesystem and write to temporary table"""
         self.db.cleanTmpFiles()
         fs_enc = sys.getfilesystemencoding()
+        if fs_enc != 'utf-8':
+            logging.warning('Filesystem-encoding is not UTF-8!')
 #        if sys.version_info <= (3, 0):
 #            self.directory = unicode(self.directory, fs_enc)
-        for dir, subdirs, files in os.walk(self.directory.encode(fs_enc)):
-            logging.debug(''.join(["Reading dir: ", dir.decode(fs_enc, 'replace')]))
+        if isinstance(self.directory, bytes):
+            self.directory = self.directory.decode('utf-8')    # ensure unicode
+        for dir, subdirs, files in os.walk(self.directory):
+            logging.debug(''.join(["Reading dir: ", dir]))
             for subdir in subdirs:
                 try:
 #                    if not os.path.ismount(os.path.join(dir, subdir)):
 #                      logging.warning('mountpoint?')
                     filename = os.path.join(dir, subdir)
                     mtime = os.stat(filename).st_mtime
-                    item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
+                    item = TmpFiles(filename=filename, mtime=mtime)
                     self.db.add(item)
                 except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
-                    logging.warning(''.join(['Could not read dir: ', filename.decode(fs_enc, 'replace')]))
+                    logging.warning(''.join(['Could not read dir: ', filename]))
             for file in files:
                 try:
                     filename = os.path.join(dir, file)
                     mtime = os.stat(filename).st_mtime
-                    item = TmpFiles(filename=filename.decode(fs_enc, 'replace'), mtime=mtime)
+                    item = TmpFiles(filename=filename, mtime=mtime)
                     self.db.add(item)
                 except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
-                    logging.warning(''.join(['Could not read file: ', filename.decode(fs_enc, 'replace')]))
+                    logging.warning(''.join(['Could not read file: ', filename]))
 
             #if '.git' in subdirs:
                 #TODO: prune directories
