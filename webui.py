@@ -84,7 +84,7 @@ def api_detail(id=None):
     for path, subst in datapath_sub:
         filedetail.filename = re.sub(path, subst, filedetail.filename)
         for meta in filemeta:
-            if hasattr(meta, 'cover'):
+            if hasattr(meta, 'cover') and meta.cover:
                 meta.cover = re.sub(path, subst, meta.cover)
     return {'detail': filedetail._asdict(), 'meta': [meta._asdict() for meta in filemeta]}
 

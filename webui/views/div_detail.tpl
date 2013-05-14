@@ -28,7 +28,7 @@
           <tbody id="filedetail">
             <tr>
               <td>
-%    if detail['mime'].startswith('video'):
+%    if detail['mime'] and detail['mime'].startswith('video'):
                 <video width="640" height="390" poster="{{cover if cover != '' else ''}}" controls>
                   <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
@@ -46,12 +46,12 @@
 </OBJECT>
                  ende test -->
 
-%    elif detail['mime'].startswith('audio'):
+%    elif detail['mime'] and detail['mime'].startswith('audio'):
                 <audio {{!'width="640" height="390" poster="'+cover+'"' if cover != '' else ''}} controls>
                   <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </audio>
-%    elif detail['mime'].startswith('image'):
+%    elif detail['mime'] and detail['mime'].startswith('image'):
                 <img src="{{detail['filename']}}" width="640" height="390"/>
 %    end # if detail['mime']...
               </td>
