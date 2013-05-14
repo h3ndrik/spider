@@ -53,6 +53,13 @@
                 </audio>
 %    elif detail['mime'] and detail['mime'].startswith('image'):
                 <img src="{{detail['filename']}}" width="640" height="390"/>
+%    elif detail['mime'] and detail['mime'].startswith('directory'):
+                <ul>
+%        for child in filedetail['children']:
+%            childfilename = os.path.basename(child['filename'])
+                  <li><a href="/detail/{{child['id']}}">{{childfilename}}</a></li>
+%        end
+                </ul>
 %    end # if detail['mime']...
               </td>
             </tr>

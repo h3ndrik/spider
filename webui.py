@@ -80,13 +80,19 @@ def detail(id=None):
 def api_detail(id=None):
     assert isinstance(id, int)
     filedetail = session.query(Files).filter(Files.id == id).one()._asdict()
+    if filedetail['mime'] == 'directory':
+        filechildrenorm = session.query(Files).filter(Files.filename.like(filedetail['filename']+'/%')).filter(~Files.filename.like(filedetail['filename']+'/%/%')).all()
+        # TODO: limit!
+        filechildren = [child._asdict() for child in filechildrenorm]
+    else:
+        filechildren = None
     filemeta = [meta._asdict() for meta in session.query(Metadata).filter(Metadata.id == id)]
     for path, subst in datapath_sub:
         filedetail['filename'] = re.sub(r'^'+path, subst, filedetail['filename'])
         for meta in filemeta:
             if meta['cover']:
                 meta['cover'] = re.sub(r'^'+path, subst, meta['cover'])
-    return {'detail': filedetail, 'meta': filemeta}
+    return {'detail': filedetail, 'meta': filemeta, 'children': filechildren}
 
 @app.route('/api/search/')
 def api_search(q=None, start=None, num=None):
