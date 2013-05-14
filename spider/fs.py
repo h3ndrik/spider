@@ -127,22 +127,30 @@ class FS(object):
             (mime, encoding) = mimetypes.guess_type(filename)
             hash = self.hashsum(filename)
             removed = None
+            filestat = os.stat(filename)
+            mtime = filestat.st_mtime
+            firstseen = time()
+            size = filestat.st_size
+            category = self.category
         elif os.path.isdir(filename):
             logger.debug(''.join(["Updating(New,Dir): ", filename]))
             mime = "directory"
             hash = None
             removed = None
+            filestat = os.stat(filename)
+            mtime = filestat.st_mtime
+            firstseen = time()
+            size = filestat.st_size
+            category = self.category
         else:
-            logger.debug(''.join(["Updating(Removed): ", filename]))
+            logger.debug(''.join(["Updating(Could not read): ", filename])) # Probably due to encoding
+            mime = None
+            hash = None
             removed = time()
-            pass # TODO! (Currently this triggers an exception on os.stat())
-                 # TODO  (And is reached by files with bad encoding)
-
-        filestat = os.stat(filename)
-        mtime = filestat.st_mtime
-        firstseen = time()
-        size = filestat.st_size
-        category = self.category
+            mtime = None
+            firstseen = time()
+            size = None
+            category = self.category
 
         item = Files(filename=filename, category=category, mtime=mtime, firstseen=firstseen, size=size, mime=mime, hash=hash, removed=removed)
         self.db.add(item)
