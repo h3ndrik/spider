@@ -7,6 +7,8 @@ from configparser import SafeConfigParser
 from time import time
 from datetime import timedelta
 
+logger = logging.getLogger(__name__)
+
 def timestamp2human(timestamp):
     delta = time() - timestamp
     attrs = {'a':365.25*86400, 'd':86400, 'h':3600, 'min':60, 's':1}
@@ -51,6 +53,7 @@ def parse_args():
     """
     Parse cmdline args
     """
+    logger = logging.getLogger(__name__)
     conf_parser = argparse.ArgumentParser(add_help=False)
     conf_parser.add_argument("-c", "--conf_file",
                              help="Specify config file", metavar="FILE", default='spider.conf')
@@ -83,13 +86,13 @@ def parse_args():
     for path in search_path:
         candidate = os.path.join(path, 'spider.conf')
         if os.path.isfile(candidate):
-            logging.info('Reading global conffile ' + candidate)
+            logger.info('Reading global conffile ' + candidate)
             config = SafeConfigParser()
             config.read([candidate])
             defaults.update(dict(config.items('Spider')))
 
     if args.conf_file and os.path.isfile(args.conf_file):
-        logging.info('Reading conffile(2) ' + args.conf_file)
+        logger.info('Reading conffile(2) ' + args.conf_file)
         config = SafeConfigParser()
         config.read([args.conf_file])
         #defaults['verbose'] = config.getint('Spider', 'verbose')
@@ -159,7 +162,7 @@ def parse_args():
     if int(args.verbose) >= 3:
         logging.basicConfig(level=logging.DEBUG)  # Log everything, and send it to stderr.
         logger.setLevel(logging.DEBUG)
-        logging.debug("Debug output enabled")
+        logger.debug("Debug output enabled")
     elif int(args.verbose) >= 2:
         logging.basicConfig(level=logging.INFO)  # Log everything, and send it to stderr.
         logger.setLevel(logging.INFO)

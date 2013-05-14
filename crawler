@@ -7,6 +7,8 @@ import sys
 from spider.helper import parse_args
 from spider.crawler import Crawler
 
+logger = logging.getLogger(__name__)
+
 """
     spider
     ~~~~~~~~~
@@ -21,18 +23,18 @@ __version__ = "0.0.3"
 
 
 def interrupthandler(signum, frame):
-    logging.warning("Caught Interrupt: " + signum)
+    logger.warning("Caught Interrupt: " + signum)
     sys.exit(0)
 
 if __name__ == "__main__":
 
     # Startup
-    logging.info("=== Spider v." + __version__ + " ===")
+    logger.info("=== Spider v." + __version__ + " ===")
     if sys.version_info <= (3, 0):
-        logging.error('This program will not work with python2')
+        logger.error('This program will not work with python2')
         sys.exit(1)
     if os.geteuid() == 0:
-        logging.warning("Warning, running as root")
+        logger.warning("Warning, running as root")
     os.nice(19)
     # Set up handlers for signals
     signal.signal(signal.SIGINT, interrupthandler)
@@ -60,4 +62,4 @@ if __name__ == "__main__":
     else:
         crawler.crawl(args)
 
-    logging.info("Done. Exiting.")
+    logger.info("Done. Exiting.")

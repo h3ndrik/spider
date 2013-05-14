@@ -3,6 +3,8 @@ from spider.models import *
 from os import getpid
 import logging
 
+logger = logging.getLogger(__name__)
+
 class DB(object):
     """Database interface"""
 #    engine = None

@@ -8,6 +8,8 @@ from spider.models import Control, Files, TmpFiles, Metadata
 from spider.helper import md5sum, nonesum
 from spider.meta import Meta
 
+logger = logging.getLogger(__name__)
+
 class FS(object):
     """All Filesystem interaction"""
 
@@ -22,7 +24,7 @@ class FS(object):
         if hashalgorithm == 'md5' or hashalgorithm == 'md5sum':
             self.hashsum = md5sum
         elif hashalgorithm == 'none' or hashalgorithm == 'None':
-            logging.info('Not computing hashsums')
+            logger.info('Not computing hashsums')
             self.hashsum = nonesum
         else:
             self.hashsum = nonesum
@@ -30,54 +32,54 @@ class FS(object):
 
     def walk(self):
         """execute subroutines of filecrawler"""
-        logging.info('Reading Filesystem')
+        logger.info('Reading Filesystem')
         self.read_fs()
-        logging.info('Computing new files')
+        logger.info('Computing new files')
 ################################# TODO Repair join!!! ###########################
         items = self.db.session.query(TmpFiles).outerjoin((Files, TmpFiles.filename == Files.filename)).\
                                                 filter(Files.filename == None).\
                                                 filter(Files.removed == None).all()
 
-        logging.info('Analyzing Files')
+        logger.info('Analyzing Files')
         for item in items:
-            #logging.debug('Analyzing: ' + item.filename)
+            #logger.debug('Analyzing: ' + item.filename)
             try:
                 self.insertfile(item.filename)
             except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                 #TODO: insert with flag set
-                logging.warning('Could not insert file \'%s\'. Probably bad encoding?' % item.filename)
+                logger.warning('Could not insert file \'%s\'. Probably bad encoding?' % item.filename)
                 self.control.errors += 1
                 self.db.session.commit()
                 pass
         self.db.session.commit()
 
-        logging.info('Computing deleted files')
+        logger.info('Computing deleted files')
 ################################# TODO Repair join!!! ###########################
         items = self.db.session.query(Files).filter(Files.category == self.category).\
                                              outerjoin((TmpFiles, Files.filename == TmpFiles.filename)).\
                                                 filter(TmpFiles.filename == None).\
                                                 filter(Files.removed == None).all()
-        logging.info('Removing')
+        logger.info('Removing')
         for item in items:
-            logging.debug('Removing: ' + item.filename)
+            logger.debug('Removing: ' + item.filename)
             self.removefile(item.filename)
         self.db.session.commit()
 
-        #logging.info('Deleting old database entries')
+        #logger.info('Deleting old database entries')
         # TODO and think of meta table
 
     def updatemeta(self):
         """update metadata"""
-        logging.info('Dumping current metadata table')
+        logger.info('Dumping current metadata table')
         rows = self.db.session.query(Metadata).filter(Metadata.file.has(Files.category == self.category)).\
                                                filter(Metadata.auto == True).all()
         for row in rows:
             self.db.session.delete(row)
         #self.db.session.commit()
-        logging.info('Updating Metadata')
+        logger.info('Updating Metadata')
         items = self.db.session.query(Files).filter(Files.category == self.category).all()
         for item in items:
-            logging.debug('Updating Metadata of: ' + item.filename)
+            logger.debug('Updating Metadata of: ' + item.filename)
             self.meta.insertmeta(item.filename, item.id)
         self.db.session.commit()
 
@@ -86,23 +88,23 @@ class FS(object):
         self.db.cleanTmpFiles()
         fs_enc = sys.getfilesystemencoding()
         if fs_enc != 'utf-8':
-            logging.warning('Filesystem-encoding is not UTF-8!')
+            logger.warning('Filesystem-encoding is not UTF-8!')
 #        if sys.version_info <= (3, 0):
 #            self.directory = unicode(self.directory, fs_enc)
         if isinstance(self.directory, bytes):
             self.directory = self.directory.decode('utf-8', 'surrogateescape')    # ensure unicode
         for dir, subdirs, files in os.walk(self.directory):
-            logging.debug(''.join(["Reading dir: ", dir]))
+            logger.debug(''.join(["Reading dir: ", dir]))
             for subdir in subdirs:
                 try:
 #                    if not os.path.ismount(os.path.join(dir, subdir)):
-#                      logging.warning('mountpoint?')
+#                      logger.warning('mountpoint?')
                     filename = os.path.join(dir, subdir)
                     mtime = os.stat(filename).st_mtime
                     item = TmpFiles(filename=filename.encode('utf-8', 'replace').decode('utf-8', 'strict'), mtime=mtime)
                     self.db.add(item)
                 except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
-                    logging.warning(''.join(['Could not read dir: ', filename]))
+                    logger.warning(''.join(['Could not read dir: ', filename]))
             for file in files:
                 try:
                     filename = os.path.join(dir, file)
@@ -110,7 +112,7 @@ class FS(object):
                     item = TmpFiles(filename=filename.encode('utf-8', 'replace').decode('utf-8', 'strict'), mtime=mtime)
                     self.db.add(item)
                 except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
-                    logging.warning(''.join(['Could not read file: ', filename]))
+                    logger.warning(''.join(['Could not read file: ', filename]))
 
             #if '.git' in subdirs:
                 #TODO: prune directories
@@ -121,17 +123,17 @@ class FS(object):
         """gather filesystem infos for 'filename' and write to table"""
         #filename = os.path.join(dir, file)
         if os.path.isfile(filename):
-            logging.debug(''.join(["Updating(New): ", filename]))
+            logger.debug(''.join(["Updating(New): ", filename]))
             (mime, encoding) = mimetypes.guess_type(filename)
             hash = self.hashsum(filename)
             removed = None
         elif os.path.isdir(filename):
-            logging.debug(''.join(["Updating(New,Dir): ", filename]))
+            logger.debug(''.join(["Updating(New,Dir): ", filename]))
             mime = "directory"
             hash = None
             removed = None
         else:
-            logging.debug(''.join(["Updating(Removed): ", filename]))
+            logger.debug(''.join(["Updating(Removed): ", filename]))
             removed = time()
             pass # TODO! (Currently this triggers an exception on os.stat())
                  # TODO  (And is reached by files with bad encoding)

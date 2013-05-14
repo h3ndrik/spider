@@ -4,6 +4,8 @@ import logging
 from spider.meta_patterns import filetypes, pattern_strings
 from spider.models import Metadata
 
+logger = logging.getLogger(__name__)
+
 class Meta(object):
     """Metadata handling for (multimedia-)files"""
 
@@ -23,7 +25,7 @@ class Meta(object):
                         try:
                             regex = re.compile(pattern, re.VERBOSE)
                         except (re.error, errormsg):
-                            logging.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
+                            logger.warning("Invalid pattern (error: %s)\nPattern:\n%s" % (
                                 errormsg, pattern))
                         else:
                             self.regexs[filetype][category][patternname].append(regex)
@@ -54,7 +56,7 @@ class Meta(object):
             ppath = os.path.dirname(path)
             for look in [path, ppath]:
                 if os.path.isfile(os.path.join(look,'cover.jpg')):
-                    logging.info('Found cover.jpg')
+                    logger.info('Found cover.jpg')
                     cover = path+'/cover.jpg'
         except:
             pass
@@ -71,9 +73,9 @@ class Meta(object):
                             if hasattr(item, key):
                                 setattr(item, key, match.group(key))
                             else:
-                                logging.info('Database has no column for %r' % key)
+                                logger.info('Database has no column for %r' % key)
                         self.db.add(item)
                         #return  # Break on first match
                 if not match:
-                    logging.info('No regex matched on %r' % filename)
+                    logger.info('No regex matched on %r' % filename)
 

@@ -3,7 +3,10 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boole
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 from collections import OrderedDict
+import logging
 import json
+
+logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 

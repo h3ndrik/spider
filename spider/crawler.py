@@ -4,6 +4,8 @@ from spider.db import DB
 from spider.models import Control, Files
 from spider.fs import FS
 
+logger = logging.getLogger(__name__)
+
 class Crawler:
     """mislabeled main program"""
 
@@ -28,14 +30,14 @@ class Crawler:
         """disable name"""
         item = self.db.getControl(args.name)
         if item.crawl == 0:
-            logging.info('Already disabled')
+            logger.info('Already disabled')
         item.crawl = 0
         self.db.session.commit()
     def enable(self, args):
         """enable name"""
         item = self.db.getControl(args.name)
         if item.crawl == 1:
-            logging.info('Already enabled')
+            logger.info('Already enabled')
         item.crawl = 1
         self.db.session.commit()
     def list(self, args):
@@ -49,12 +51,12 @@ class Crawler:
         else:
             items = self.db.getJobs()
         for item in items:
-            logging.info('Starting crawl of: ' + item.name)
+            logger.info('Starting crawl of: ' + item.name)
             if hasattr(args, "hash") and args.hash:
                 hashalgorithm = args.hash
-                logging.info('User selected hash-method: ' + args.hash)
+                logger.info('User selected hash-method: ' + args.hash)
                 if not args.hash == item.hashalgorithm:
-                    logging.warning('Selected hash-algorithm does not match configured one')
+                    logger.warning('Selected hash-algorithm does not match configured one')
             else:
                 hashalgorithm = item.hashalgorithm
             if hasattr(args, 'nometa') and args.nometa == True:
@@ -83,7 +85,7 @@ class Crawler:
         else:
             items = self.db.getJobs()
         for item in items:
-            logging.info('Getting Metadata of: ' + item.name)
+            logger.info('Getting Metadata of: ' + item.name)
             try:
                 self.check(item.name)
                 self.db.lock(item)
@@ -109,14 +111,14 @@ class Crawler:
             try:
                 os.kill(item.pid_lock, 0)	# Sends nothing but raises exception if pid is not valid
             except OSError:
-                logging.warning('Last crawl did not terminate cleanly. Proceeding.')
+                logger.warning('Last crawl did not terminate cleanly. Proceeding.')
                 item.pid_lock = 0
                 self.db.session.commit()
             else:
-                logging.error('Another crawl is running simultaneously. Skipping.')
+                logger.error('Another crawl is running simultaneously. Skipping.')
                 raise(CrawlerError('Another crawl is running simultaneously. Skipping.'))
         if not os.path.ismount(item.needsmountpoint):
-            logging.error('Not mounted. Needs mount point: \"' + item.needsmountpoint + '\". Aborting')
+            logger.error('Not mounted. Needs mount point: \"' + item.needsmountpoint + '\". Aborting')
             raise(CrawlerError('Runtime error'))
 
 class CrawlerError(Exception):
