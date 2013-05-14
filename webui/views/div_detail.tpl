@@ -16,29 +16,29 @@
 %# TODO: Display 'cover.jpg' if exists
 %    if detail['mime'].startswith('video'):
                 <video width="640" height="390" poster="" controls>
-                  <source src="/file/{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                  <source src="{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
                 <!-- test
 <OBJECT classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" width="640" height="480" id="vlcviewerie">
-<param name="MRL" value="/file/{{filedetail['detail']['filename']}}" />
+<param name="MRL" value="{{filedetail['detail']['filename']}}" />
 <param name="ShowDisplay" value="False" />
 <param name="AutoLoop" value="False" />
 <param name="AutoPlay" value="True" />
 <param name="Volume" value="100" />
 <param name="toolbar" value="true" />
-<embed type="application/x-vlc-plugin" src="/file/{{filedetail['detail']['filename']}}" pluginspage="http://www.videolan.org" version="VideoLAN.VLCPlugin.2" id="vlcviewer" autostart="1" loop="no" width="640" height="480" toolbar="true"></embed>
+<embed type="application/x-vlc-plugin" src="{{filedetail['detail']['filename']}}" pluginspage="http://www.videolan.org" version="VideoLAN.VLCPlugin.2" id="vlcviewer" autostart="1" loop="no" width="640" height="480" toolbar="true"></embed>
 <noembed>VLC Plugin nicht gefunden..</noembed>
 </OBJECT>
                  ende test -->
 
 %    elif detail['mime'].startswith('audio'):
                 <audio controls>
-                  <source src="/file/{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                  <source src="{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
                   This browser is not compatible with HTML5
                 </audio>
 %    elif detail['mime'].startswith('image'):
-                <img src="{{'/file'+filedetail['detail']['filename']}}" width="640" height="390"/>
+                <img src="{{filedetail['detail']['filename']}}" width="640" height="390"/>
 %    end
               </td>
               <td>
@@ -66,7 +66,7 @@
                   <li>Quality: {{meta['quality']}}</li>
                   <li>Group: {{meta['group']}}</li>
 
-                  <li>Cover: <img src="{{'/file'+meta['cover'] if meta['cover'] else ''}}" width="64" height="39" /></li>
+                  <li>Cover: <img src="{{meta['cover'] if meta['cover'] else ''}}" width="64" height="39" /></li>
                   <li>Tags: {{meta['tags']}}</li>
                   <li>Genre: {{meta['genre']}}</li>
                   <li>Comment: {{meta['comment']}}</li>

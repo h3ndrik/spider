@@ -37,8 +37,6 @@ for path in search_path:
         datapath_sub = dict()
         try:
             datapath_sub = config.items('datapath_substitutions')
-            #for path, replace in datapath_sub:
-            #    print (key)
         except:
             pass
 
@@ -83,6 +81,9 @@ def api_detail(id=None):
     assert isinstance(id, int)
     filedetail = session.query(Files).filter(Files.id == id).one()
     filemeta = session.query(Metadata).filter(Metadata.id == id)
+    for path, subst in datapath_sub:
+        filedetail.filename = re.sub(path, subst, filedetail.filename)
+        filemeta.cover = re.sub(path, subst, filemeta.cover)
     return {'detail': filedetail._asdict(), 'meta': [meta._asdict() for meta in filemeta]}
 
 @app.route('/api/search/')
@@ -101,6 +102,9 @@ def api_search(q=None, start=None, num=None):
         result = session.query(Files).filter(Files.filename.like('%'+q+'%'))
     if result:
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
+        for file in result[start:start+num]:
+            for path, subst in datapath_sub:
+                file.filename = re.sub(path, subst, file.filename)
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else: # TODO isn't reached?!
         abort(400, {'num_results': '0'})
@@ -113,13 +117,16 @@ def api_new(start=None, num=None):
         num = int(request.query.num or 20)
     result = session.query(Files).order_by(Files.mtime.desc())
     if result:
+        for file in result[start:start+num]:
+            for path, subst in datapath_sub:
+                file.filename = re.sub(path, subst, file.filename)
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else:
         abort(400, 'Nothing found')
 
-@app.route('/file/<filename:path>')
-def file_static(filename):
-    return static_file(filename, root='/') #################!!!!!!!!!!!!!!!!!!#################
+#@app.route('/file/<filename:path>')
+#def file_static(filename):
+#    return static_file(filename, root='/')
 
 @app.route('/js/<filename:path>')
 def js_static(filename):
