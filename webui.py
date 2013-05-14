@@ -83,8 +83,9 @@ def api_detail(id=None):
     filemeta = session.query(Metadata).filter(Metadata.id == id)
     for path, subst in datapath_sub:
         filedetail.filename = re.sub(path, subst, filedetail.filename)
-        if hasattr(filemeta, 'cover'):
-            filemeta.cover = re.sub(path, subst, filemeta.cover)
+        for meta in filemeta:
+            if hasattr(meta, 'cover'):
+                meta.cover = re.sub(path, subst, meta.cover)
     return {'detail': filedetail._asdict(), 'meta': [meta._asdict() for meta in filemeta]}
 
 @app.route('/api/search/')

@@ -14,6 +14,11 @@
 %    path = os.path.dirname(detail['filename'])
 %    size = size2human(detail['size'])
 %    age = timestamp2human(detail['mtime'])
+%    try:
+%        cover = filedetail['meta'][0]['cover']
+%    except:
+%        cover = ''
+%    end
         <table class="table table-striped table-bordered">
           <thead>
             <tr>
@@ -24,7 +29,7 @@
             <tr>
               <td>
 %    if detail['mime'].startswith('video'):
-                <video width="640" height="390" poster="{{filedetail['meta'][0]['cover'] if filedetail['meta'][0]['cover'] else ''}}" controls>
+                <video width="640" height="390" poster="{{cover if cover != '' else ''}}" controls>
                   <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
@@ -42,7 +47,7 @@
                  ende test -->
 
 %    elif detail['mime'].startswith('audio'):
-                <audio {{'width="640" height="390" poster="'+filedetail['meta'][0]['cover'] if filedetail['meta'][0]['cover']+'"' else ''}}" controls>
+                <audio {{!'width="640" height="390" poster="'+cover+'"' if cover != '' else ''}} controls>
                   <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </audio>
