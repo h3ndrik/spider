@@ -121,5 +121,5 @@ class TmpFiles(Base, DictSerializable):
     """holds snapshot of filesystem for further processing"""
     __tablename__ = 'tmp'
 
-    filename = Column(String, primary_key=True)
+    filename = Column(String, primary_key=True)    # convert_unicode='force', unicode_error='replace' or Column(Unicode) http://docs.sqlalchemy.org/en/rel_0_8/core/types.html#sqlalchemy.types.String
     mtime = Column(Integer(10))

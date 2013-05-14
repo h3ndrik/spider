@@ -9,7 +9,7 @@ class DB(object):
 #    session = None
 
     def __init__(self, database='sqlite:///spider.db'):
-        engine = create_engine(database)
+        engine = create_engine(database, convert_unicode=True, encoding='utf-8')
         #engine.raw_connection().connection.text_factory = str
         Session = sessionmaker(bind=engine)
         self.session = Session()

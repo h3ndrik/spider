@@ -45,7 +45,7 @@ class FS(object):
                 self.insertfile(item.filename)
             except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                 #TODO: insert with flag set
-                logging.warning('Could not insert file. Probably bad encoding?')
+                logging.warning('Could not insert file \'%s\'. Probably bad encoding?' % item.filename)
                 self.control.errors += 1
                 self.db.session.commit()
                 pass
@@ -90,7 +90,7 @@ class FS(object):
 #        if sys.version_info <= (3, 0):
 #            self.directory = unicode(self.directory, fs_enc)
         if isinstance(self.directory, bytes):
-            self.directory = self.directory.decode('utf-8')    # ensure unicode
+            self.directory = self.directory.decode('utf-8', 'surrogateescape')    # ensure unicode
         for dir, subdirs, files in os.walk(self.directory):
             logging.debug(''.join(["Reading dir: ", dir]))
             for subdir in subdirs:
@@ -99,7 +99,7 @@ class FS(object):
 #                      logging.warning('mountpoint?')
                     filename = os.path.join(dir, subdir)
                     mtime = os.stat(filename).st_mtime
-                    item = TmpFiles(filename=filename, mtime=mtime)
+                    item = TmpFiles(filename=filename.encode('utf-8', 'replace').decode('utf-8', 'strict'), mtime=mtime)
                     self.db.add(item)
                 except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                     logging.warning(''.join(['Could not read dir: ', filename]))
@@ -107,7 +107,7 @@ class FS(object):
                 try:
                     filename = os.path.join(dir, file)
                     mtime = os.stat(filename).st_mtime
-                    item = TmpFiles(filename=filename, mtime=mtime)
+                    item = TmpFiles(filename=filename.encode('utf-8', 'replace').decode('utf-8', 'strict'), mtime=mtime)
                     self.db.add(item)
                 except (getattr(__builtins__,'FileNotFoundError', IOError), OSError):
                     logging.warning(''.join(['Could not read file: ', filename]))
