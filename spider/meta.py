@@ -76,6 +76,6 @@ class Meta(object):
                                 logger.info('Database has no column for %r' % key)
                         self.db.add(item)
                         #return  # Break on first match
-                if not match:
-                    logger.info('No regex matched on %r' % filename)
+            if not match:
+                logger.info('No regex matched on %r' % filename)
 
