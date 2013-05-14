@@ -68,6 +68,7 @@
                 <ul>
                   <li>MTime: {{age}}</li>
                   <li>Size: {{size}}</li>
+                  <li><a href="{{detail['filename']}}">Download</a></li>
                   <li>category=<b>{{detail['category']}}</b>, mimetype=<b>{{detail['mime']}}</b>, firstseen=<b>{{timestamp2human(detail['firstseen'])}}</b>, hash=<b>{{detail['hash']}}</b></li>
                 </ul>
               </td>
@@ -107,6 +108,9 @@
                   <li>Auto: {{meta['auto']}}</li>
                   <li>Flag: {{meta['flag']}}</li>
                   <li>Source: {{meta['source']}}</li>
+                </ul>
+                <ul>
+                  <li>Infos sind richtig | Infos l&ouml;schen | Für den Admin markieren</li>
                 </ul>
               </td>
             </tr>
