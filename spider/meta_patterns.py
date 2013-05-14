@@ -290,7 +290,7 @@ pattern_strings = {
         (?P<seriesname>[^\/]+)                  # Showname
         [\/]                                    # new directory
         (
-        ([sS]taffel|[sS]eries|[sS]eason)?[ \._\-]? # Season
+        ([sS]taffel|[sS]eries|[sS]eason)?[ \._\-]?  # Season
         (?P<seasonnumber>[0-9]+)                # seasonnumber
         ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
         [\/]                                    # new directory
@@ -312,22 +312,27 @@ pattern_strings = {
         [\/]                                    # new directory
         ([mM]ovie[s]?|[fF]ilm[e]?)              # Movies directory
         [\/]                                    # new directory
+        (
+        (?P<collection>[^\/]+?)                 # Collection, non-greedy
+        [\/]                                    # new directory
+        )?                                      # collection is optional
         (?P<moviename>[^\/]+)                   # Moviename
         [\/]                                    # new directory
         (
         (?P<quality>[^\/]+?)                    # quality
-        ([ \,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
+        ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
         [\/]                                    # new directory
         )?                                      # quality is optional
         [^\/]*$                                 # filename (ignored)
         ''',
 
-        # /path/Movies/Star Trek IV.avi
+        # /path/Movies/Star Trek IV (E).avi
         '''^.*                                  # path prefix
         [\/]                                    # new directory
         ([mM]ovie[s]?|[fF]ilm[e]?)              # Movies directory
         [\/]                                    # new directory
         (?P<moviename>[^\/]+)                   # Moviename
+        ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
         \.                                      # dot
         [^\/]*$                                 # fileextension
         ''',
@@ -371,7 +376,7 @@ pattern_strings = {
         (?P<track>\d+)                          # track
         [ \._\-]*                               # whitespace
         )?                                      # track is optional
-        (?P<artist>)+                           # artist
+        (?P<artist>[^\/]+)                      # artist
         [ \._\-]+                               # whitespace
         (?P<title>[^\/]+)                       # Title
         \.                                      # dot
@@ -387,9 +392,9 @@ pattern_strings = {
         ([aA]udiobook[s]?)                      # Audiobooks directory
         [\/]                                    # new directory
         (
-        (?P<artist>[^\/]+)                      # Artist
+        (?P<artist>[^\/]+?)                     # Artist, non-greedy
         [\/]                                    # new directory
-        )??                                     # Artist is optional (non-greedy)
+        )?                                      # Artist is optional
         (?P<collection>[^\/]+)                  # Collection
         [\/]                                    # new directory
         (
