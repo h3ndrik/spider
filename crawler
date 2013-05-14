@@ -3,6 +3,7 @@
 
 import logging
 import os, signal
+import sys
 from spider.helper import parse_args
 from spider.crawler import Crawler
 
