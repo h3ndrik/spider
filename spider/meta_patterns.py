@@ -292,7 +292,7 @@ pattern_strings = {
         (
         ([sS]taffel|[sS]eries|[sS]eason)?[ \._\-]?  # Season
         (?P<seasonnumber>[0-9]+)                # seasonnumber
-        ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
+        ([ ,\._\-]+[\[(](?P<language>[^\/]+?)[\])])?  # language, optional
         [\/]                                    # new directory
         )?                                      # season directory is optional
         [^\/]*?                                 # anything (non-greedy) (probably seasonname(again))
@@ -315,12 +315,12 @@ pattern_strings = {
         (
         (?P<collection>[^\/]+?)                 # Collection, non-greedy
         [\/]                                    # new directory
-        )?                                      # collection is optional
+        )??                                     # collection is optional, and non-greedy (or should quality be non-greedy?)
         (?P<moviename>[^\/]+)                   # Moviename
         [\/]                                    # new directory
         (
         (?P<quality>[^\/]+?)                    # quality
-        ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
+        ([ ,\._\-]+[\[(](?P<language>[^\/]+?)[\])])?  # language, optional
         [\/]                                    # new directory
         )?                                      # quality is optional
         [^\/]*$                                 # filename (ignored)
@@ -332,7 +332,7 @@ pattern_strings = {
         ([mM]ovie[s]?|[fF]ilm[e]?)              # Movies directory
         [\/]                                    # new directory
         (?P<moviename>[^\/]+)                   # Moviename
-        ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
+        ([ ,\._\-]+[\[(](?P<language>[^\/]+?)[\])])?  # language, optional
         \.                                      # dot
         [^\/]*$                                 # fileextension
         ''',
