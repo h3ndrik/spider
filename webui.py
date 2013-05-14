@@ -82,10 +82,10 @@ def api_detail(id=None):
     filedetail = session.query(Files).filter(Files.id == id).one()
     filemeta = session.query(Metadata).filter(Metadata.id == id)
     for path, subst in datapath_sub:
-        filedetail.filename = re.sub(path, subst, filedetail.filename)
+        filedetail.filename = re.sub(r'^'+path, subst, filedetail.filename)
         for meta in filemeta:
             if hasattr(meta, 'cover') and meta.cover:
-                meta.cover = re.sub(path, subst, meta.cover)
+                meta.cover = re.sub(r'^'+path, subst, meta.cover)
     return {'detail': filedetail._asdict(), 'meta': [meta._asdict() for meta in filemeta]}
 
 @app.route('/api/search/')
@@ -106,7 +106,7 @@ def api_search(q=None, start=None, num=None):
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
         for file in result[start:start+num]:
             for path, subst in datapath_sub:
-                file.filename = re.sub(path, subst, file.filename)
+                file.filename = re.sub(r'^'+path, subst, file.filename)
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else: # TODO isn't reached?!
         abort(400, {'num_results': '0'})
@@ -121,7 +121,7 @@ def api_new(start=None, num=None):
     if result:
         for file in result[start:start+num]:
             for path, subst in datapath_sub:
-                file.filename = re.sub(path, subst, file.filename)
+                file.filename = re.sub(r'^'+path, subst, file.filename)
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': [file._asdict() for file in result[start:start+num]]}
     else:
         abort(400, 'Nothing found')
