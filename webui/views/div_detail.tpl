@@ -10,12 +10,12 @@
 %    else:
 %        icon = '/img/mime/' + 'unknown' + '.png'
 %    end
-%    filename = os.path.basename(detail['filename'])
-%    path = os.path.dirname(detail['filename'])
+%    filename = os.path.basename(detail['link'])
+%    path = os.path.dirname(detail['link'])
 %    size = size2human(detail['size'])
 %    age = timestamp2human(detail['mtime'])
 %    try:
-%        cover = filedetail['meta'][0]['cover']
+%        cover = filedetail['meta'][0]['coverlink']
 %    except:
 %        cover = None
 %    end
@@ -30,31 +30,32 @@
               <td>
 %    if detail['mime'] and detail['mime'].startswith('video'):
                 <video width="640" height="390" poster="{{cover if cover else ''}}" controls>
-                  <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
+                  <source src="{{detail['link']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
                 <!-- test
 <OBJECT classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" width="640" height="480" id="vlcviewerie">
-<param name="MRL" value="{{filedetail['detail']['filename']}}" />
+<param name="MRL" value="{{detail['link']}}" />
 <param name="ShowDisplay" value="False" />
 <param name="AutoLoop" value="False" />
 <param name="AutoPlay" value="True" />
 <param name="Volume" value="100" />
 <param name="toolbar" value="true" />
-<embed type="application/x-vlc-plugin" src="{{filedetail['detail']['filename']}}" pluginspage="http://www.videolan.org" version="VideoLAN.VLCPlugin.2" id="vlcviewer" autostart="1" loop="no" width="640" height="480" toolbar="true"></embed>
+<embed type="application/x-vlc-plugin" src="{{detail['link']}}" pluginspage="http://www.videolan.org" version="VideoLAN.VLCPlugin.2" id="vlcviewer" autostart="1" loop="no" width="640" height="480" toolbar="true"></embed>
 <noembed>VLC Plugin nicht gefunden..</noembed>
 </OBJECT>
                  ende test -->
 
 %    elif detail['mime'] and detail['mime'].startswith('audio'):
                 <audio {{!'width="640" height="390" poster="'+cover+'"' if cover else ''}} controls>
-                  <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
+                  <source src="{{detail['link']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </audio>
 %    elif detail['mime'] and detail['mime'].startswith('image'):
-                <img src="{{detail['filename']}}" width="640" height="390"/>
+                <img src="{{detail['link']}}" width="640" height="390"/>
 %    elif detail['mime'] and detail['mime'].startswith('directory'):
                 <ul>
+                  <li><a href="/search/?q={{os.path.dirname(detail['filename'])}}">..</a></li>
 %        for child in filedetail['children']:
 %            childfilename = os.path.basename(child['filename'])
                   <li><a href="/detail/{{child['id']}}">{{childfilename}}</a></li>
@@ -75,7 +76,7 @@
                 <ul>
                   <li>MTime: {{age}}</li>
                   <li>Size: {{size}}</li>
-                  <li><a href="{{detail['filename']}}">Download</a></li>
+                  <li><a href="{{detail['link']}}">Download</a></li>
                   <li>category=<b>{{detail['category']}}</b>, mimetype=<b>{{detail['mime']}}</b>, firstseen=<b>{{timestamp2human(detail['firstseen'])}}</b>, hash=<b>{{detail['hash']}}</b></li>
                 </ul>
               </td>

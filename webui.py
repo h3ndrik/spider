@@ -87,11 +87,14 @@ def api_detail(id=None):
     else:
         filechildren = None
     filemeta = [meta._asdict() for meta in session.query(Metadata).filter(Metadata.id == id)]
+    filedetail['link'] = filedetail['filename']
     for path, subst in datapath_sub:
-        filedetail['filename'] = re.sub(r'^'+path, subst, filedetail['filename'])
-        for meta in filemeta:
-            if meta['cover']:
-                meta['cover'] = re.sub(r'^'+path, subst, meta['cover'])
+        filedetail['link'] = re.sub(r'^'+path, subst, filedetail['link'])
+    for meta in filemeta:
+        meta['coverlink'] = meta['cover']
+        for path, subst in datapath_sub:
+            if meta['coverlink']:
+                meta['coverlink'] = re.sub(r'^'+path, subst, meta['coverlink'])
     return {'detail': filedetail, 'meta': filemeta, 'children': filechildren}
 
 @app.route('/api/search/')
@@ -112,8 +115,9 @@ def api_search(q=None, start=None, num=None):
         print('Query \"' + q + '\" Returned ' + str(result.count()) + ' results')
         filedetail = [file._asdict() for file in result[start:start+num]]
         for file in filedetail:
+            file['link'] = file['filename']
             for path, subst in datapath_sub:
-                file['filename'] = re.sub(r'^'+path, subst, file['filename'])
+                file['link'] = re.sub(r'^'+path, subst, file['link'])
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': filedetail}
     else: # TODO isn't reached?!
         abort(400, {'num_results': '0'})
@@ -128,8 +132,9 @@ def api_new(start=None, num=None):
     if result:
         filedetail = [file._asdict() for file in result[start:start+num]]
         for file in filedetail:
+            file['link'] = file['filename']
             for path, subst in datapath_sub:
-                file['filename'] = re.sub(r'^'+path, subst, file['filename'])
+                file['link'] = re.sub(r'^'+path, subst, file['link'])
         return {'num_results': result.count(), 'start':start, 'num':num, 'results': filedetail}
     else:
         abort(400, 'Nothing found')

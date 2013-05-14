@@ -20,8 +20,8 @@
 %            else:
 %                icon = '/img/mime/' + 'unknown' + '.png'
 %            end
-%            filename = os.path.basename(result['filename'])
-%            path = os.path.dirname(result['filename'])
+%            filename = os.path.basename(result['link'])
+%            path = os.path.dirname(result['link'])
 %            size = size2human(result['size'])
 %            age = timestamp2human(result['mtime'])
             <tr>
