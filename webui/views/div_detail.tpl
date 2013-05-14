@@ -77,6 +77,15 @@
 %    for meta in filedetail['meta']:
             <tr>
               <td>
+%#                <form class="" action="/api/updatemeta/">
+%#                  <fieldset>
+%#                    Series: <input type="text" class="" name="seriesname" value="{{meta['seriesname']}}">
+%#                    <input type="text" class="" name="seasonnumber" size="4" maxlength="4" value="{{meta['seasonnumber']}}">
+%#                    <input type="text" class="" name="episodenumber" size="4" maxlength="4" value="{{meta['episodenumber']}}">
+%#                    Language: <input type="text" class="" name="language" value="{{meta['language'] or ''}}">
+%#                      <button type="submit" class="btn btn-primary">Submit</button>
+%#                  </fieldset>
+%#                </form>
                 <ul>
 %        if meta['filetype'] == 'tv_show':
                   <li>Series: <b>{{meta['seriesname']}}</b></li>
@@ -110,7 +119,7 @@
                   <li>Source: {{meta['source']}}</li>
                 </ul>
                 <ul>
-                  <li>Infos sind richtig | Infos l&ouml;schen | Für den Admin markieren</li>
+                  <li>Infos &uuml;bernehmen | Infos l&ouml;schen | Für den Admin markieren</li>
                 </ul>
               </td>
             </tr>
