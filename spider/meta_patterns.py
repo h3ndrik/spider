@@ -292,7 +292,7 @@ pattern_strings = {
         (
         ([sS]taffel|[sS]eries|[sS]eason)?[ \._\-]? # Season
         (?P<seasonnumber>[0-9]+)                # seasonnumber
-        ([ ,\._\-]+\[?(?P<language>[^\/]+?)\]?)?  # language, optional
+        ([ ,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
         [\/]                                    # new directory
         )?                                      # season directory is optional
         [^\/]*?                                 # anything (non-greedy) (probably seasonname(again))
@@ -316,7 +316,7 @@ pattern_strings = {
         [\/]                                    # new directory
         (
         (?P<quality>[^\/]+?)                    # quality
-        ([ \,\._\-]+\[?(?P<language>[^\/]+?)\]?)?  # language, optional
+        ([ \,\._\-]+[\[(]?(?P<language>[^\/]+?)[\])]?)?  # language, optional
         [\/]                                    # new directory
         )?                                      # quality is optional
         [^\/]*$                                 # filename (ignored)
@@ -344,10 +344,35 @@ pattern_strings = {
         [\/]                                    # new directory
         (?P<artist>[^\/]+)                      # Artist
         [\/]                                    # new directory
+        ((?P=artist)+[ \._\-]+)?                # optional artist+whitespace again
         (?P<album>[^\/]+)                       # Album
         [\/]                                    # new directory
+        ((?P=artist)+[ \._\-]+)?                # optional artist+whitespace again
+        (
         (?P<track>\d+)                          # track
         [ \._\-]*                               # whitespace
+        )?                                      # track is optional
+        (?P<title>[^\/]+)                       # Title
+        \.                                      # dot
+        [^\/]*$                                 # fileextension
+        ''',
+    ],
+    },
+    'sampler': {
+    'path_patterns_sampler': [
+        # /path/Sampler/Collection/01 - Title.mp3
+        '''^.*                                  # path prefix
+        [\/]                                    # new directory
+        ([sS]ampler|[sS]oundtrack[s]?)          # Sampler directory
+        [\/]                                    # new directory
+        (?P<collection>[^\/]+)                  # Sampler name
+        [\/]                                    # new directory
+        (
+        (?P<track>\d+)                          # track
+        [ \._\-]*                               # whitespace
+        )?                                      # track is optional
+        (?P<artist>)+                           # artist
+        [ \._\-]+                               # whitespace
         (?P<title>[^\/]+)                       # Title
         \.                                      # dot
         [^\/]*$                                 # fileextension
