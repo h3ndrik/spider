@@ -17,7 +17,7 @@
 %    try:
 %        cover = filedetail['meta'][0]['cover']
 %    except:
-%        cover = ''
+%        cover = None
 %    end
         <table class="table table-striped table-bordered">
           <thead>
@@ -29,7 +29,7 @@
             <tr>
               <td>
 %    if detail['mime'] and detail['mime'].startswith('video'):
-                <video width="640" height="390" poster="{{cover if cover != '' else ''}}" controls>
+                <video width="640" height="390" poster="{{cover if cover else ''}}" controls>
                   <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
@@ -47,7 +47,7 @@
                  ende test -->
 
 %    elif detail['mime'] and detail['mime'].startswith('audio'):
-                <audio {{!'width="640" height="390" poster="'+cover+'"' if cover != '' else ''}} controls>
+                <audio {{!'width="640" height="390" poster="'+cover+'"' if cover else ''}} controls>
                   <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </audio>
