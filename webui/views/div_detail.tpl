@@ -2,21 +2,30 @@
 
 %try:
 %if filedetail:
+%    from spider.helper import size2human, timestamp2human
+%    import os
 %    detail = filedetail['detail']
+%    if detail['mime']:
+%        icon = '/img/mime/' + detail['mime'].split('/', 1)[0] + '.png'
+%    else:
+%        icon = '/img/mime/' + 'unknown' + '.png'
+%    end
+%    filename = os.path.basename(detail['filename'])
+%    path = os.path.dirname(detail['filename'])
+%    size = size2human(detail['size'])
+%    age = timestamp2human(detail['mtime'])
         <table class="table table-striped table-bordered">
           <thead>
             <tr>
-              <th>{{filedetail['detail']['filename']}}</th>
-              <th>Detail</th>
+              <th><img src="{{icon}}" />&nbsp;{{filename}}</th>
             </tr>
           </thead>
           <tbody id="filedetail">
             <tr>
               <td>
-%# TODO: Display 'cover.jpg' if exists
 %    if detail['mime'].startswith('video'):
-                <video width="640" height="390" poster="" controls>
-                  <source src="{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                <video width="640" height="390" poster="{{filedetail['meta'][0]['cover'] if filedetail['meta'][0]['cover'] else ''}}" controls>
+                  <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </video>
                 <!-- test
@@ -33,72 +42,77 @@
                  ende test -->
 
 %    elif detail['mime'].startswith('audio'):
-                <audio controls>
-                  <source src="{{filedetail['detail']['filename']}}" type="{{filedetail['detail']['mime']}}" />
+                <audio {{'width="640" height="390" poster="'+filedetail['meta'][0]['cover'] if filedetail['meta'][0]['cover']+'"' else ''}}" controls>
+                  <source src="{{detail['filename']}}" type="{{detail['mime']}}" />
                   This browser is not compatible with HTML5
                 </audio>
 %    elif detail['mime'].startswith('image'):
-                <img src="{{filedetail['detail']['filename']}}" width="640" height="390"/>
-%    end
+                <img src="{{detail['filename']}}" width="640" height="390"/>
+%    end # if detail['mime']...
               </td>
+            </tr>
+
+            <tr>
               <td>
-%    from spider.helper import size2human, timestamp2human
+                <span><b>{{filename}}</b></span><br />
+                <span class="pull-left">{{path}}</span><br />
+%    if detail['removed']:
+                <span>
+                <span>THIS ITEM WAS REMOVED {{timestamp2human(detail['removed'])}}</span>
+%    end
+                <ul>
+                  <li>MTime: {{age}}</li>
+                  <li>Size: {{size}}</li>
+                  <li>category=<b>{{detail['category']}}</b>, mimetype=<b>{{detail['mime']}}</b>, firstseen=<b>{{timestamp2human(detail['firstseen'])}}</b>, hash=<b>{{detail['hash']}}</b></li>
+                </ul>
+              </td>
+            </tr>
+
 %    for meta in filedetail['meta']:
+            <tr>
+              <td>
                 <ul>
 %        if meta['filetype'] == 'tv_show':
-                  <li>Series: {{meta['seriesname']}}</li>
-                  <li>Season: {{meta['seasonnumber']}}</li>
-                  <li>Episode: {{meta['episodenumber']}}</li>
+                  <li>Series: <b>{{meta['seriesname']}}</b></li>
+                  <li>Season: {{meta['seasonnumber']}}, Episode: {{meta['episodenumber']}}</li>
 %        elif meta['filetype'] == 'movie':
-                  <li>Moviename: {{meta['moviename']}}</li>
+                  <li>Moviename: <b>{{meta['moviename']}}</b></li>
 %        elif meta['filetype'] == 'album':
+                  <li>Collection: {{meta['collection']}}</li>
                   <li>Artist: {{meta['artist']}}</li>
                   <li>{{meta['year']}} - {{meta['album']}}</li>
                   <li>{{meta['track']}} - {{meta['title']}}</li>
 %        elif meta['filetype'] == 'ebook':
                   <li>Author: {{meta['author']}}</li>
-%        end
-                  <li>Collection: {{meta['collection']}}</li>
-                  <li>Duration: {{meta['duration']}}</li>
+%        end # if meta['filetype'] == ...
+
+%        # Common Attributes:
                   <li>Language: {{meta['language']}}</li>
+                </ul>
+                <ul>
+                  <li>Cover: <img src="{{meta['cover'] if meta['cover'] else ''}}" width="64" height="39" /></li>
+                  <li>Duration: {{meta['duration']}}</li>
                   <li>Resolution: {{meta['resolution']}}</li>
                   <li>Codec: {{meta['codec']}}</li>
                   <li>Quality: {{meta['quality']}}</li>
                   <li>Group: {{meta['group']}}</li>
-
-                  <li>Cover: <img src="{{meta['cover'] if meta['cover'] else ''}}" width="64" height="39" /></li>
-                  <li>Tags: {{meta['tags']}}</li>
                   <li>Genre: {{meta['genre']}}</li>
+                  <li>Tags: {{meta['tags']}}</li>
                   <li>Comment: {{meta['comment']}}</li>
                   <li>Auto: {{meta['auto']}}</li>
                   <li>Flag: {{meta['flag']}}</li>
                   <li>Source: {{meta['source']}}</li>
                 </ul>
-%    end
               </td>
             </tr>
-            <tr>
-              <td>
-                <ul>
-                  <span><b>{{filedetail['detail']['filename']}}</b></span>
-                  <li>Category: {{filedetail['detail']['category']}}</li>
-                  <li>MTime: {{timestamp2human(filedetail['detail']['mtime'])}}</li>
-                  <li>Firstseen: {{timestamp2human(filedetail['detail']['firstseen'])}}</li>
-                  <li>Size: {{size2human(filedetail['detail']['size'])}}</li>
-                  <li>Mimetype: {{filedetail['detail']['mime']}}</li>
-                  <li>Hash: {{filedetail['detail']['hash']}}</li>
-                  <li>Removed: {{filedetail['detail']['removed']}}</li>
-                </ul>
-              </td>
-              <td></td>
-            </tr>
+%    end # for meta in filedetail['meta']:
           </tbody>
         </table>
 
         <script>$(document).ready(go_detail());</script>
 
-%end
+%end # if filedetail
 %except NameError:
 %    pass
-%end
+%end # try
       </div> <!-- id="div_detail" -->
