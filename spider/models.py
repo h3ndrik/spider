@@ -60,7 +60,6 @@ class Control(Base, DictSerializable):
     def __repr__(self):
         return "<Control('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (self.name, self.directory, self.needsmountpoint, self.hashalgorithm, self.crawl, self.errors, self.last_crawl, self.pid_lock)
 
-
 class Files(Base, DictSerializable):
     """direct attributes of file"""
     __tablename__ = 'files'
@@ -74,6 +73,7 @@ class Files(Base, DictSerializable):
     mime = Column(String)
     hash = Column(String(32))
     removed = Column(Integer(10))
+    #parent (TODO relationship Files)
     #meta = relationship("Metadata", backref='file')
 
 class Metadata(Base, DictSerializable):
@@ -99,6 +99,7 @@ class Metadata(Base, DictSerializable):
     #bitrate = Column(String)
     quality = Column(String)
     group = Column(String)
+    #erscheinungsdatum
 
     moviename = Column(String)
 
@@ -117,6 +118,7 @@ class Metadata(Base, DictSerializable):
     comment = Column(String)
     auto = Column(Boolean)
     flag = Column(Integer)
+    #votes = Column(Integer)
 
     source = Column(String)    # who generated this metadata
 

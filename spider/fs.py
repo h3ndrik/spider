@@ -60,6 +60,7 @@ class FS(object):
                                                 filter(TmpFiles.filename == None).\
                                                 filter(Files.removed == None).all()
         logger.info('Removing')
+        logger.warning('Not implemented')  # TODO Fix join
         for item in items:
             logger.debug('Removing: ' + item.filename)
             self.removefile(item.filename)

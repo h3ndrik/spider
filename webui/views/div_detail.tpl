@@ -127,7 +127,7 @@
                   <li>Source: {{meta['source']}}</li>
                 </ul>
                 <ul>
-                  <li>Infos &uuml;bernehmen | Infos l&ouml;schen | Für den Admin markieren</li>
+                  <li><a href="" alt="Infos &uuml;bernehmen">+</a> | <a href="" alt="Infos l&ouml;schen">-</a> | <a href="" alt="Für den Admin markieren">!</a></li>
                 </ul>
               </td>
             </tr>

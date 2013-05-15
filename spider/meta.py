@@ -46,7 +46,9 @@ class Meta(object):
         else:
             filetype = 'other'
 
-        # get cover.jpg TODO
+        # TODO: Plugins
+
+        # get cover.jpg
         cover = None
         try:
             if os.path.isdir(filename):
