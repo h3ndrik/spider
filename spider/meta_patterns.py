@@ -12,7 +12,8 @@ filetypes = {'filetype_video':[".m4v", ".3gp", ".nsv", ".ts", ".ty", ".strm", ".
 pattern_strings = {
     'video': {
     'tv_show': {
-    # Patterns to parse tv_shows input filenames with ((c)tvnamer)
+    # Patterns to parse tv_shows input filenames
+    # from tvnamer (http://github.com/dbr/tvnamer) licensed as public domain/unlicense
     'filename_patterns_tv_shows': [
         # [group] Show - 01-02 [crc]
         '''^(.*\\/)*
