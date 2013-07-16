@@ -83,6 +83,7 @@ class Metadata(Base, DictSerializable):
     id = Column(Integer, ForeignKey('files.id'))
     file = relationship("Files", backref=backref('meta')) 
     metaid = Column(Integer, primary_key=True)
+    ref = Column(String)
     filetype = Column(String)
     seriesname = Column(String)
     seasonnumber = Column(Integer)

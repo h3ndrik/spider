@@ -2,7 +2,7 @@
 
 %try:
 %if filedetail:
-%    from spider.helper import size2human, timestamp2human
+%    from mediaspider.helper import size2human, timestamp2human
 %    import os
 %    detail = filedetail['detail']
 %    if detail['mime']:

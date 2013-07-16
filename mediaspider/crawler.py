@@ -8,7 +8,6 @@ from mediaspider.helper import parse_args
 from mediaspider.db import DB
 from mediaspider.models import Control, Files
 from mediaspider.fs import FS
-from mediaspider import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +20,8 @@ logger = logging.getLogger(__name__)
     :copyleft: 2013 by h3ndrik.
     :license: WTFTPL, see LICENSE for more details.
 """
+
+__version__ = "0.0.3"
 
 def interrupthandler(signum, frame):
     logger.warning("Caught Interrupt: " + signum)

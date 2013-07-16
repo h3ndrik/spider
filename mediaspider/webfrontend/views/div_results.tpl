@@ -12,7 +12,7 @@
 
 %try:
 %    if results:
-%    from spider.helper import size2human, timestamp2human
+%    from mediaspider.helper import size2human, timestamp2human
 %    import os.path
 %        for result in results['results']:
 %            if result['mime']:

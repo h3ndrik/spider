@@ -1,3 +1,4 @@
+import os
 import json
 from bottle import Bottle, run, template, static_file, TEMPLATE_PATH
 from bottle import route, request, response, abort
@@ -5,9 +6,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext import serializer
 from sqlalchemy import or_
 import logging
-from spider.models import *
-from spider.helper import size2human, timestamp2human
-import os
+from mediaspider.models import *
+from mediaspider.helper import size2human, timestamp2human
 import re
 from time import sleep
 from configparser import SafeConfigParser
@@ -19,6 +19,7 @@ title = 'Spider Search'
 host = '0.0.0.0'  # 'localhost'
 port = 8080
 debug = False
+datapath_sub = dict()
 search_path = ['/etc', '']
 for path in search_path:
     candidate = os.path.join(path, 'spider.conf')
@@ -145,15 +146,15 @@ def api_new(start=None, num=None):
 
 @app.route('/js/<filename:path>')
 def js_static(filename):
-    return static_file(filename, root='./webui/js')
+    return static_file(filename, root='./js')
 
 @app.route('/img/<filename:path>')
 def img_static(filename):
-    return static_file(filename, root='./webui/img')
+    return static_file(filename, root='./img')
 
 @app.route('/css/<filename:path>')
 def img_static(filename):
-    return static_file(filename, root='./webui/css')
+    return static_file(filename, root='./css')
 
-TEMPLATE_PATH.insert(0,'webui/views/')
+TEMPLATE_PATH.insert(0,'views/')
 run(app, host=host, port=port, debug=debug, reloader=debug)
