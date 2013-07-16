@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 __version__ = "0.0.3"
 
 def interrupthandler(signum, frame):
-    logger.warning("Caught Interrupt: " + signum)
+    logger.warning("Caught Interrupt: " + str(signum))
     sys.exit(0)
 
 def main():

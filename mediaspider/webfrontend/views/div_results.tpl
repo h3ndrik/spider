@@ -1,4 +1,7 @@
       <div class="container" id="div_results">
+
+%try:
+%    if results:
         <h2>Ergebnisse</h2>
         <!-- Tabelle mit abwechselnder Zellenhintergrundfarbe und Außenrahmen -->
         <table class="table table-striped table-bordered">
@@ -9,9 +12,6 @@
             </tr>
           </thead>
           <tbody id="results">
-
-%try:
-%    if results:
 %    from mediaspider.helper import size2human, timestamp2human
 %    import os.path
 %        for result in results['results']:
@@ -43,12 +43,11 @@
               </td>
             </tr>
 %        end
-
+          </tbody>
+        </table>
 %    end
 %except NameError:
 %    pass
 %end
 
-          </tbody>
-        </table>
-      </div>
+      </div> <!-- id="div_results" -->
