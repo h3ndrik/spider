@@ -1,8 +1,8 @@
 import os
 import re
 import logging
-from spider.meta_patterns import filetypes, pattern_strings
-from spider.models import Metadata
+from mediaspider.meta_patterns import filetypes, pattern_strings
+from mediaspider.models import Metadata
 
 logger = logging.getLogger(__name__)
 

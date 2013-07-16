@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from spider.models import *
+from mediaspider.models import *
 from os import getpid
 import logging
 

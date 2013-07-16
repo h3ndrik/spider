@@ -3,10 +3,10 @@ import os, sys
 from time import time
 import mimetypes
 mimetypes.init()
-from spider.db import DB
-from spider.models import Control, Files, TmpFiles, Metadata
-from spider.helper import md5sum, nonesum
-from spider.meta import Meta
+from mediaspider.db import DB
+from mediaspider.models import Control, Files, TmpFiles, Metadata
+from mediaspider.helper import md5sum, nonesum
+from mediaspider.meta import Meta
 
 logger = logging.getLogger(__name__)
 

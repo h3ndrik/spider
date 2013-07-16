@@ -1,10 +1,71 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
 import logging
-import os
-from spider.db import DB
-from spider.models import Control, Files
-from spider.fs import FS
+import os, signal
+import sys
+from mediaspider.helper import parse_args
+from mediaspider.db import DB
+from mediaspider.models import Control, Files
+from mediaspider.fs import FS
+from mediaspider import __version__
 
 logger = logging.getLogger(__name__)
+
+"""
+    spider
+    ~~~~~~~~~
+    
+    Crawl ...
+        
+    :copyleft: 2013 by h3ndrik.
+    :license: WTFTPL, see LICENSE for more details.
+"""
+
+def interrupthandler(signum, frame):
+    logger.warning("Caught Interrupt: " + signum)
+    sys.exit(0)
+
+def main():
+    # Startup
+    if sys.version_info <= (3, 0):
+        logger.error('This program will not work with python2')
+        sys.exit(1)
+    os.nice(19)
+    # Set up handlers for signals
+    signal.signal(signal.SIGINT, interrupthandler)
+    signal.signal(signal.SIGTERM, interrupthandler)
+    args = parse_args()
+
+    crawler = Crawler(args.database)
+
+    logger.info("=== Spider v." + repr(__version__) + " ===")
+    if os.geteuid() == 0:
+        logger.warning("Warning, running as root")
+
+    #args.func(args)  # Broken, work around:
+#    print args
+    if args.sub == 'add':
+        crawler.add(args)
+    elif args.sub == 'del':
+        crawler.delete(args)
+    elif args.sub == 'disable':
+        crawler.disable(args)
+    elif args.sub == 'enable':
+        crawler.enable(args)
+    elif args.sub == 'crawl':
+        crawler.crawl(args)
+    elif args.sub == 'meta':
+        crawler.meta(args)
+    elif args.sub == 'list':
+        crawler.list(args)
+    else:
+        crawler.crawl(args)
+
+    logger.info("Done. Exiting.")
+
+if __name__ == '__main__':
+    main()
 
 class Crawler:
     """mislabeled main program"""
