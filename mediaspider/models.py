@@ -61,7 +61,7 @@ class Control(Base, DictSerializable):
         return "<Control('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (self.name, self.directory, self.needsmountpoint, self.hashalgorithm, self.crawl, self.errors, self.last_crawl, self.pid_lock)
 
 class Files(Base, DictSerializable):
-    """direct attributes of file"""
+    """attributes of file"""
     __tablename__ = 'files'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -80,31 +80,38 @@ class Metadata(Base, DictSerializable):
     """indirect and user-generated attributes of file"""
     __tablename__ = 'meta'
 
+    metaid = Column(Integer, primary_key=True)
     id = Column(Integer, ForeignKey('files.id'))
     file = relationship("Files", backref=backref('meta')) 
-    metaid = Column(Integer, primary_key=True)
-    ref = Column(String)
-    filetype = Column(String)
+    lastupdated = Column(Integer)
+    source = Column(String)    # who generated this metadata
+    remoteid = Column(String)  # ID on 'source'
+    mtype = Column(Enum('tv_series', 'movie', 'tv_movie', 'video', 'video_game'))
+    cover = Column(String)
+    comment = Column(String)
+    flags = Column(Integer)
+
+    # Common attributes
+    duration = Column(Integer)
+    language = Column(String)
+    year = Column(Integer)
+    release_date
+#    title = Column(String)
+#    alias_titles = Column(String)
+
+    # Quality
+    codec = Column(String)
+    #bitrate = Column(String)
+    #resolution = Column(String)
+    quality = Column(String)
+
+    #filetype = Column(String)
     seriesname = Column(String)
     seasonnumber = Column(Integer)
     episodenumber = Column(Integer)
     #episodenumberstart = Column(Integer)
     #episodenumberend = Column(Integer)
-    #year = Column(Integer)
-    #month = Column(Integer)
-    #day = Column(Integer)
-    language = Column(String)
-    duration = Column(Integer)
-    resolution = Column(String)
-    codec = Column(String)
-    #bitrate = Column(String)
-    quality = Column(String)
-    group = Column(String)
-    #erscheinungsdatum
 
-    moviename = Column(String)
-
-    title = Column(String)
     artist = Column(String)
     album = Column(String)
     year = Column(Integer)
@@ -114,14 +121,92 @@ class Metadata(Base, DictSerializable):
 
     author = Column(String)
 
-    cover = Column(String)
     tags = Column(String)
-    comment = Column(String)
-    auto = Column(Boolean)
-    flag = Column(Integer)
+
     #votes = Column(Integer)
 
-    source = Column(String)    # who generated this metadata
+
+
+#class MetaTVSeries(Base, DictSerializable):
+#    """Metadata from thetvdb.com"""
+#    __tablename__ = 'metatvseries'
+#
+#    meta = relationship("Metadata", backref=backref('metaid'))
+#    thetvdbseriesid
+#    SeriesName
+#    AliasNames
+#    Overview
+#    FirstAired
+#    Network
+#
+#class MetaTVEpisode(Base, DictSerializable):
+#    """Metadata from thetvdb.com"""
+#    __tablename__ = 'metatvepisode'
+#
+#    meta = relationship("Metadata", backref=backref('metaid'))
+#    thetvdbeposodeid
+##    Combined_episodenumber
+##    Combined_season
+##    DVD_chapter
+##    DVD_discid
+##    DVD_episodenumber
+##    DVD_Season
+#    Director
+#    EpImgFlag
+#    EpisodeName
+#    EpisodeNumber
+#    FirstAired
+#    GuestStars
+##    IMDB_ID 
+#    Overview
+#    ProductionCode
+#    Rating
+#    SeasonNumber
+#    Writer
+#    absolute_number
+#    img_filename
+#    lastupdated
+#    seasonid
+#    seriesid
+#
+#MetaMovies(Base, DictSerializable):
+#    """Metadata from IMDB"""
+#    __tablename__ = 'metamovies'
+#
+#    id = Column(Integer, ForeignKey('files.id'))
+#    file = relationship("Files", backref=backref('meta'))
+#
+#    actors
+#also_known_as
+#country
+#    directors
+#episodes date season episode title
+#film_locations
+#    genres
+#    imdb_id
+#imdb_url
+#language
+#    plot
+#plot_simple
+#    poster
+#    rated
+#    rating
+#rating_count
+#    release_date
+#runtime
+#    title
+##mtype
+#    writers
+#    year
+##business
+##technical
+#    votes
+##cast
+##crew
+##critics
+##trivia
+##quotes
+
 
 class TmpFiles(Base, DictSerializable):
     """holds snapshot of filesystem for further processing"""
